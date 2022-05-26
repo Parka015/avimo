@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Avimo</string>
+    <string name="hint_edittext">Pulsa el botón para hablar</string>
+    <string name="error_escucha">No te he oido, repite otra vez</string>
+    <string name="escuchando">Habla ahora...</string>
+</resources>
