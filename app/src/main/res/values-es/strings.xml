@@ -4,4 +4,7 @@
     <string name="hint_edittext">Pulsa el botón para hablar</string>
     <string name="error_escucha">No te he oido, repite otra vez</string>
     <string name="escuchando">Habla ahora...</string>
+
+    <string name="evento_creado">El evento ha sido creado</string>
+    <string name="evento_no_creado">No ha sido posible crear el evento</string>
 </resources>

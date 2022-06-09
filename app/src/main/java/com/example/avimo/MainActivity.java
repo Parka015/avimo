@@ -29,7 +29,8 @@ import java.util.Locale;
 public class MainActivity extends AppCompatActivity {
     public static final Integer RecordAudioRequestCode = 1;
     private SpeechRecognizer speechRecognizer;
-    private EditText editText;
+    private EditText input;
+    private EditText output;
     private ImageView micButton;
     private ArrayList<String> data;
     private TextView textView;
@@ -46,7 +47,8 @@ public class MainActivity extends AppCompatActivity {
             checkPermission();
         }
 
-        editText = findViewById(R.id.text);
+        input = findViewById(R.id.text);
+        output = findViewById(R.id.avimo_text);
         micButton = findViewById(R.id.button);
         textView = findViewById(R.id.textView);
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
@@ -83,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResults(Bundle bundle) {
                 data = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
-                editText.setText(data.get(0));
+                input.setText(data.get(0));
                 textView.setVisibility(View.INVISIBLE);
                 main();
             }
@@ -147,9 +149,26 @@ public class MainActivity extends AppCompatActivity {
 
     public void main(){
 
+        input.setText("Tu has dicho: "+data.toString());
 
-        tts.speak("Tu has dicho, "+data.toString().trim(), TextToSpeech.QUEUE_ADD, null);
-        editText.setText("Tu has dicho, "+data.toString());
+        if (data.toString().toUpperCase().equals("[CREAR EVENTO]"))
+        {
+            //exito=crearEvento(...)
+            //if(exito == true)
+            tts.speak(getString(R.string.evento_creado).trim(), TextToSpeech.QUEUE_ADD, null);
+            //else tts.speak(getString(R.string.evento_no_creado).trim(), TextToSpeech.QUEUE_ADD, null);
+        }
+        else if (data.toString().toUpperCase().equals("[LISTAR EVENTO]")){
+
+            //exito=Evento(...)
+            //if(exito == true)
+            tts.speak("Listar evento".trim(), TextToSpeech.QUEUE_ADD, null);
+            //else tts.speak(getString(R.string.evento_no_creado).trim(), TextToSpeech.QUEUE_ADD, null);
+
+        }
+        else tts.speak("No entiendo".trim(), TextToSpeech.QUEUE_ADD, null);
+
+
 
     }
 }

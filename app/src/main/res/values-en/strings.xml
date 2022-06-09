@@ -4,4 +4,7 @@
     <string name="hint_edittext">Tap on the botton to speak</string>
     <string name="error_escucha">I couldn´t hear you, repeat again please</string>
     <string name="escuchando">Speak now...</string>
+
+    <string name="evento_creado">The event has been created</string>
+    <string name="evento_no_creado">The event couldn´t be created</string>
 </resources>
