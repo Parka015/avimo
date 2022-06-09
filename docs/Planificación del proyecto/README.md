@@ -10,11 +10,7 @@ El objeto principal del calendario son los eventos, estos pueden ser de distinto
 
 - **[F0] Interacción por voz con el asistente** :  El asistente se comunicará por voz con el usuario para ejecutar cualquier funcionalidad.
 
-- **[F1] Activación por voz del AV** :  El AV estará en modo espera en todo momento pero para acceder a cualquier funcionalidad previamente habrá que decir un código por voz para que este interprete nuestra petición.
-
-- **[F2] Notificación de los eventos** :  El asistente notificará o no (a elección del usuario) los eventos cercanos siguiendo unas opciones predeterminadas (modo de aviso, fecha y hora), pero estas se podrán cambiar. El modo de aviso de un evento puede ser, por medio de una notificación o por voz.
-
-- **[F3] Sincronización con Google Calendar** :  La aplicación hará uso de la API de Google Calendar para gestionar los eventos.
+- **[F3] Sincronización con calendario** :  La aplicación hará uso de la API de Android para trabajar con el calendario.
 
 - **[F4] Gestionar etiquetas** : Se podrán crear, borrar y modificar etiquetas. 
 
@@ -29,3 +25,12 @@ El objeto principal del calendario son los eventos, estos pueden ser de distinto
 - **[F8] Buscar hueco en calendario** :  El AV será capaz de buscar un hueco en el calendario para añadir un nuevo evento o actividad.
 
 - **[F9] Comando de ayuda (opcional)** :  El AV dispondrá de una sección de preguntas frecuentes, orientada a enseñar sobre el uso básico de la aplicación. Se le podrá decir palabras clave (etiquetas, crear, recordatorios...) para que busque preguntas asociadas a dichas palabras. Posteriormente informará al usuario de las preguntas encontradas por si alguna se corresponde con la duda que tenía.
+
+
+### Funcionalidades descartadas:
+
+- **[F3] Sincronización con Google Calendar** :  La aplicación hará uso de la API de Google Calendar para gestionar los eventos. **EXPLICACIÓN: Esto se debe porque usaremos la API que ofrece Android en su lugar, ya que esta pensada para ser usada en dispositivos móviles. La otra API esta pensada para ser usada en diversas plataformas y es más aparatosa de configurar.**
+
+- **[F1] Activación por voz del AV** :  El AV estará en modo espera en todo momento pero para acceder a cualquier funcionalidad previamente habrá que decir un código por voz para que este interprete nuestra petición. **EXPLICACIÓN: Esto no será necesario ya que Androdid no permite hacer reconocimiento de voz en segundo plano, por lo que la interacción con el asistente se hará en primer plano. Dicho esto, el comando de activación pierde su sentido.**
+
+- **[F2] Notificación de los eventos** :  El asistente notificará o no (a elección del usuario) los eventos cercanos siguiendo unas opciones predeterminadas (modo de aviso, fecha y hora), pero estas se podrán cambiar. El modo de aviso de un evento puede ser, por medio de una notificación o por voz. **EXPLICACIÓN: Esto no será necesario ya que el propio calendario se encargará de notificar los eventos que se hayan creado.**
