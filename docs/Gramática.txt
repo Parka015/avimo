@@ -35,12 +35,12 @@ TOKEN:{
 
 
     | <tipofecha1: "el " <numero> [" de ", " del "] [<mes>,<numero_mes>] ([" de ", " del "] <anio>)? >              // El ? se supone que expresa que puede no aparecer o si aparece aparece 1 vez
-    | <fecha_unica: ["mañana","pasado mañana", <dia_semana> ([<info_adicional1>,<info_adicional2>])? , <tipofecha1> ] ([<hora_ini>,<hora_franja>])? >       //Para los casos donde solo se de una fecha
+    | <fecha_unica: ["hoy","mañana","pasado mañana", <dia_semana> ([<info_adicional1>,<info_adicional2>])? , <tipofecha1> ] ([<hora_ini>,<hora_franja>])? >       //Para los casos donde solo se de una fecha
                                                                                                                                                         // ej: "lunes desde la 1 de la tarde hasta las 2 de la tarde"
                                                                                                                                                 // ej: "el 15 de enero del 22 a las 7 de la tarde " 
 
-    | <fecha_franja_aux: ["mañana","pasado mañana", <dia_semana> , <tipofecha1> ] (<hora_ini>)? >                                            
-    | <fecha_franja: "desde " ("el ")? <fecha_franja_aux> [" hasta ", " al "] <fecha_franja_aux> ([<info_adicional1>,<info_adicional2>])? >     //Para los casos donde se den una fecha de inicio y otra de fin
+    | <fecha_franja_aux: ["hoy","mañana","pasado mañana", <dia_semana> , <tipofecha1> ] (<hora_ini>)? >                                            
+    | <fecha_franja: "desde " ("el ")? <fecha_franja_aux> [" hasta ", " al "] ("el ")? <fecha_franja_aux> ([<info_adicional1>,<info_adicional2>])? >     //Para los casos donde se den una fecha de inicio y otra de fin
                                                                                                                                                 // ej: "desde el lunes al martes de la próxima semana"
                                                                                                                                                 // ej: "desde mañana a las 8 de la mañana al martes de la próxima semana"
 
