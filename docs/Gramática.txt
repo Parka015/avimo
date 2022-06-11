@@ -1,0 +1,37 @@
+
+TOKEN:{  
+    
+    //Tipos de tokens basicos
+
+    <letra: ["a"-"z","A"-"Z"]>
+    | <digito: ["0"-"9"]>
+    
+    | <palabra: (<letra>)+ >
+    | <numero: (<digito>)+ >
+
+
+    //Enfocados en la fecha
+    | <dia_semana: ["LUNES","MARTES","MIÉRCOLES", "JUEVES", "VIERNES", "SABADO", "DOMINGO"]>
+    | <mes: ["ENERO","FEBRERO","MARZO", "ABRIL", "MAYO", "JUNIO", "JULIO","AGOSTO", "SEPTIEMBRE","OCTUBRE","NOVIEMBRE","DICIEMBRE"]>
+
+    | <numero_mes: ["1"-"12"]>
+    | <anio: [<digito> <digito> <digito> <digito>, <digito> <digito> ]> //en caso de que se indique 2012 o 12 (las 2 ultimas cifras)
+    | <info_adicional1: "DE LA " ["PROXIMA","SIGUIENTE"] "SEMANA">
+    | <info_adicional2: "DE LA SEMANA QUE VIENE">
+
+
+
+    //Tipos de tokens especificos de crear evento
+
+    | <tipofecha1: "EL " <numero> [" DE ", " DEL "] [<mes>,<numero_mes>] ([" DE ", " DEL "] <anio>)? >              // El ? se supone que expresa que puede no aparecer o si aparece aparece 1 vez
+    | <fechaFinal: ["MAÑANA","PASADO MAÑANA", <dia_semana> ([<info_adicional1>,<info_adicional2>])? , <tipofecha1> ]>
+
+    | <titulo: [" DE ", "CON "] ["NOMBRE ", "TÍTULO "] ([<palabra>,<numero>] " " )+ >          // ej: " DE NOMBRE Cita con el medico" | "CON TÍTULO Cita con el medico 2"
+    | <localizacion: "LOCALIZACIÓN " ("EN ")? <palabra> >                                       // ej: "LOCALIZACIÓN EN Motril" | "LOCALIZACIÓN Motril"
+    | <tags: "TAGS " [<palabra>, (<palabra>  " ")+ "Y " <palabra>] >                            // ej: "TAGS medico" | "TAGS salud urgente Y traumatologo"
+
+    | <crear_evento: <fechaFinal> <titulo> (<localizacion>)? (<tags>)? >    //Tengo duda como escribir esto porque en principio, si quiero permitir un orden cualquiera de los tokens que componen
+                                                                                // crear_evento tendria 4! posibilidades. Tal vez no sea necesario definir crear_evento y usar las expresiones reg
+                                                                                // de <fechaFinal>, <titulo> ... para obtener la informacion por separado
+
+}
