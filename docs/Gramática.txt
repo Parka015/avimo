@@ -19,19 +19,38 @@ TOKEN:{
     | <info_adicional1: "de la " ["próxima ","siguiente "] "semana">
     | <info_adicional2: "de la semana que viene">
 
+    //Enfocados en la hora
+    | <info_adicional3: [" y " [<digito> (<digito>)?, "cuarto", "media"], "menos cuarto"]>
+    | <info_adicional4: " de la " ["tarde" , "noche", "mañana"]>
+    | <hora: <digito> (<digito>)? (info_adicional3)? <info_adicional4> >            // ej: "7 y 5 de la mañana" | "8 menos cuarto de la tarde" | "10 de la mañana"
+
+
+
 
 
     //Tipos de tokens especificos de crear evento
 
+    | <hora_ini: " a " ["las ","la"] <hora> >                                                   // ej: "a las 7 y 5 de la mañana" | "a la 1 menos cuarto de la tarde"
+    | <hora_franja: "desde " ["las ","la"] <hora> [" hasta ", " a "] ["las ","la"] <hora>>      // ej: "desde las 7 y 5 de la mañana hasta las 2 de la tarde" | "desde la 1 menos cuarto de la tarde a las 2 de la tarde"
+
+
     | <tipofecha1: "el " <numero> [" de ", " del "] [<mes>,<numero_mes>] ([" de ", " del "] <anio>)? >              // El ? se supone que expresa que puede no aparecer o si aparece aparece 1 vez
-    | <fechaFinal: ["mañana","pasado mañana", <dia_semana> ([<info_adicional1>,<info_adicional2>])? , <tipofecha1> ]>
+    | <fecha_unica: ["mañana","pasado mañana", <dia_semana> ([<info_adicional1>,<info_adicional2>])? , <tipofecha1> ] ([<hora_ini>,<hora_franja>])? >       //Para los casos donde solo se de una fecha
+                                                                                                                                                        // ej: "lunes desde la 1 de la tarde hasta las 2 de la tarde"
+                                                                                                                                                // ej: "el 15 de enero del 22 a las 7 de la tarde " 
+
+    | <fecha_franja_aux: ["mañana","pasado mañana", <dia_semana> , <tipofecha1> ] (<hora_ini>)? >                                            
+    | <fecha_franja: "desde " ("el ")? <fecha_franja_aux> [" hasta ", " al "] <fecha_franja_aux> ([<info_adicional1>,<info_adicional2>])? >     //Para los casos donde se den una fecha de inicio y otra de fin
+                                                                                                                                                // ej: "desde el lunes al martes de la próxima semana"
+                                                                                                                                                // ej: "desde mañana a las 8 de la mañana al martes de la próxima semana"
 
     | <titulo: [" de ", "con "] ["nombre ", "título "] ([<palabra>,<numero>] " " )+ >          // ej: " de nombre cita con el medico" | "con título cita con el medico 2"
     | <localizacion: "localización " ("en ")? <palabra> >                                       // ej: "localización en motril" | "localización motril"
     | <tags: "tags " [<palabra>, (<palabra>  " ")+ "y " <palabra>] >                            // ej: "tags medico" | "tags salud urgente y traumatologo"
+    | <fecha: [<fecha_unica>,<fecha_franja>]>
 
-    | <crear_evento: <fechaFinal> <titulo> (<localizacion>)? (<tags>)? >    //Tengo duda como escribir esto porque en principio, si quiero permitir un orden cualquiera de los tokens que componen
+    | <crear_evento: <fecha> <titulo> (<localizacion>)? (<tags>)? >    //Tengo duda como escribir esto porque en principio, si quiero permitir un orden cualquiera de los tokens que componen
                                                                                 // crear_evento tendria 4! posibilidades. Tal vez no sea necesario definir crear_evento y usar las expresiones reg
-                                                                                // de <fechaFinal>, <titulo> ... para obtener la informacion por separado
+                                                                                // de <fecha>, <titulo> ... para obtener la informacion por separado
 
 }
