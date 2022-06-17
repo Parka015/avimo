@@ -20,9 +20,10 @@ TOKEN:{
     | <info_adicional2: "de la semana que viene">
 
     //Enfocados en la hora
-    | <info_adicional3: [" y " [<digito> (<digito>)?, "cuarto", "media"], "menos cuarto"]>
+    | <info_adicional3: [" y " [<digito> (<digito>)?, "cuarto", "media"], "menos cuarto", "menoscuarto"]>
     | <info_adicional4: " de la " ["tarde" , "noche", "mañana"]>
-    | <hora: <digito> (<digito>)? (info_adicional3)? <info_adicional4> >            // ej: "7 y 5 de la mañana" | "8 menos cuarto de la tarde" | "10 de la mañana"
+    | <info_adicional5: ":" <digito> <digito> >
+    | <hora: <digito> (<digito>)? ([ <info_adicional3> , <info_adicional5> ])? (<info_adicional4>)? >            // ej: "7 y 5 de la mañana" | "8 menos cuarto de la tarde" | "10 de la mañana"
 
 
 
@@ -44,8 +45,8 @@ TOKEN:{
                                                                                                                                                 // ej: "desde el lunes al martes de la próxima semana"
                                                                                                                                                 // ej: "desde mañana a las 8 de la mañana al martes de la próxima semana"
 
-    | <titulo: [" de ", "con "] ["nombre ", "título "] ([<palabra>,<numero>] " " )+ >          // ej: " de nombre cita con el medico" | "con título cita con el medico 2"
-    | <localizacion: "localización " ("en ")? <palabra> >                                       // ej: "localización en motril" | "localización motril"
+    | <titulo: [" de ", "con "] ["nombre ", "título "] ([<palabra>,<numero>] " " )+ "fin">          // ej: " de nombre cita con el medico" | "con título cita con el medico 2"
+    | <localizacion: "localización " ("en ")? ([<palabra>,<numero>] " " )+ "fin" >                                       // ej: "localización en motril" | "localización motril"
     | <tags: "tags " [<palabra>, (<palabra>  " ")+ "y " <palabra>] >                            // ej: "tags medico" | "tags salud urgente y traumatologo"
     | <fecha: [<fecha_unica>,<fecha_franja>]>
 
