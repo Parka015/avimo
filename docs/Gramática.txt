@@ -35,13 +35,13 @@ TOKEN:{
     | <hora_franja: "desde " ["las ","la"] <hora> [" hasta ", " a "] ["las ","la"] <hora>>      // ej: "desde las 7 y 5 de la mañana hasta las 2 de la tarde" | "desde la 1 menos cuarto de la tarde a las 2 de la tarde"
 
 
-    | <tipofecha1: "el " <numero> [" de ", " del "] [<mes>,<numero_mes>] ([" de ", " del "] <anio>)? >              // El ? se supone que expresa que puede no aparecer o si aparece aparece 1 vez
+    | <dia_mes_anio: "el " <numero> [" de ", " del "] [<mes>,<numero_mes>] ([" de ", " del "] <anio>)? >              // El ? se supone que expresa que puede no aparecer o si aparece aparece 1 vez
     | <fecha_unica: ["hoy","mañana","pasado mañana", <dia_semana> ([<info_adicional1>,<info_adicional2>])? , <tipofecha1> ] ([<hora_ini>,<hora_franja>])? >       //Para los casos donde solo se de una fecha
                                                                                                                                                         // ej: "lunes desde la 1 de la tarde hasta las 2 de la tarde"
                                                                                                                                                 // ej: "el 15 de enero del 22 a las 7 de la tarde " 
 
     //Estos 3 token antes de fecha_franja estan creados para permitir fechas como del 2 al 30 de enero
-    | <tipofecha1_aux: "el " <numero> ([" de ", " del "] [<mes>,<numero_mes>])? ([" de ", " del "] <anio>)? >
+    | <dia_mes_anio_aux: "el " <numero> ([" de ", " del "] [<mes>,<numero_mes>])? ([" de ", " del "] <anio>)? >
     | <fecha_franja_aux1: ["hoy","mañana","pasado mañana", <dia_semana> ([<info_adicional1>,<info_adicional2>])? , <tipofecha1_aux> ] (<hora_ini>)? > 
     | <fecha_franja_aux2: ["hoy","mañana","pasado mañana", <dia_semana> ([<info_adicional1>,<info_adicional2>])? , <tipofecha1> ] (<hora_ini>)? >                                                
     | <fecha_franja: "desde " ("el ")? <fecha_franja_aux1> [" hasta ", " al "] ("el ")? <fecha_franja_aux2> ([<info_adicional1>,<info_adicional2>])? >     //Para los casos donde se den una fecha de inicio y otra de fin
