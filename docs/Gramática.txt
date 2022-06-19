@@ -44,7 +44,7 @@ TOKEN:{
     | <dia_mes_anio_aux: "el " <numero> ([" de ", " del "] [<mes>,<numero_mes>])? ([" de ", " del "] <anio>)? >
     | <fecha_franja_aux1: ["hoy","mañana","pasado mañana", <dia_semana> ([<info_adicional1>,<info_adicional2>])? , <tipofecha1_aux> ] (<hora_ini>)? > 
     | <fecha_franja_aux2: ["hoy","mañana","pasado mañana", <dia_semana> ([<info_adicional1>,<info_adicional2>])? , <tipofecha1> ] (<hora_ini>)? >                                                
-    | <fecha_franja: "desde " ("el ")? <fecha_franja_aux1> [" hasta ", " al "] ("el ")? <fecha_franja_aux2> ([<info_adicional1>,<info_adicional2>])? >     //Para los casos donde se den una fecha de inicio y otra de fin
+    | <fecha_franja: "desde " ("el ")? <fecha_franja_aux1> [" hasta ", " al "] ("el ")? <fecha_franja_aux2> >     //Para los casos donde se den una fecha de inicio y otra de fin
                                                                                                                                                 // ej: "desde el lunes al martes de la próxima semana"
                                                                                                                                                 // ej: "desde mañana a las 8 de la mañana al martes de la próxima semana"
 
