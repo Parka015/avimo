@@ -11,7 +11,7 @@ public interface Regex {
     public static String dia_semana = "(lunes|martes|miércoles|jueves|viernes|sábado|domingo)";
     public static String mes = "(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)";
 
-    public static String numero_mes = "[1-12]";
+    public static String numero_mes = "\\d{1,2}";
     public static String anio_4 = "\\d{4}";
     public static String anio_2 = "\\d{2}";
     public static String info_adicional1 = "de la (próxima|siguiente) semana";
