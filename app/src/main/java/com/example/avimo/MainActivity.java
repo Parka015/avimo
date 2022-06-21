@@ -151,8 +151,11 @@ public class MainActivity extends AppCompatActivity implements Regex {
         }
     }
 
+//AQUI retocar main que lo he comentado para solo ejecutar crear evento
     public void main(){
         input.setText("Tu has dicho: "+data);
+        respuesta="";
+
         /*
         if (data.toString().toUpperCase().equals("[CREAR EVENTO]"))
         {
@@ -173,7 +176,7 @@ public class MainActivity extends AppCompatActivity implements Regex {
         */
 
 
-
+        /*
         Pattern pattern_fecha = Pattern.compile(regex_fecha);
 
         Matcher m;
@@ -188,7 +191,8 @@ public class MainActivity extends AppCompatActivity implements Regex {
             tts.speak("No se ha encontrado una fecha".trim(), TextToSpeech.QUEUE_ADD, null);
             output.setText("No se ha encontrado una fecha ");
         }
-
+        */
+        crearEvento();
 
     }
 
@@ -200,7 +204,7 @@ public class MainActivity extends AppCompatActivity implements Regex {
         //String titulo = recogerTitulo(data);
         //ArrayList<String> tags = recogerTags(data);
         //String localizacion = regogerLocalizacion(data);
-
+    /*
         if(respuesta.isEmpty()){
             Evento ev = new Evento();
             exito=true;
@@ -213,6 +217,8 @@ public class MainActivity extends AppCompatActivity implements Regex {
                 respuesta += getString(R.string.evento_no_creado);
             }
         }
+        */
+
         tts.speak(respuesta.trim(), TextToSpeech.QUEUE_ADD, null);
         output.setText(respuesta);
 
@@ -250,19 +256,27 @@ public class MainActivity extends AppCompatActivity implements Regex {
             fecha_ini = m.group();      //fecha_franja_aux1
 
             //Formato <dia> del <numero_mes> del <año>
-            //String = procesarFechaFranjaAux1(fecha_ini)
+            String fini = procesarFecha(fecha_ini);
             //String = procesarHora(fecha_ini)
 
-            //String = procesarFecha(fecha_fin)
+            String ffin = procesarFecha(fecha_fin);
             //String = procesarHora(fecha_fin)
 
-
+            //AQUI BORRAR
+            respuesta += "Fecha inicial: "+fini+" Fecha final: "+ffin;
 
         }else{
             m = Pattern.compile(fecha_unica).matcher(dat);
             if(m.find()){   //Se ha proporcionado una fecha única
 
+                fecha = m.group();
+
+                String fini = procesarFecha(fecha);
+                //String = procesarHora(fecha_ini)
                 //AQUI por desarrollar
+
+                //AQUI BORRAR
+                respuesta += "Fecha: "+fini;
             }
             else
                 respuesta += getString(R.string.fecha_no_encontrada);
@@ -271,19 +285,28 @@ public class MainActivity extends AppCompatActivity implements Regex {
         return result;
     }
 
-    private String procesarFechaFranjaAux1(String fecha){
+
+    /*
+    Devuelve la fecha contenida en el parámetro fecha con formato "<dia> del <numero_mes> del <año>"
+    return dia=[1,99] mes[-2,11] anio=[-1,9999]
+        * si el dia introducido es 0 se modificará a 1 del mes que corresponda
+        * si mes o anio es -1 es porque no se ha especificado
+        * si mes o dia es -2 el dia o mes no es correcto
+     */
+    private String procesarFecha(String fecha){
 
         String resultado = "";
-        int mes;
-        int dia;
-        int anio;
+        int mes = -1;
+        int dia = -1;
+        int anio = -1;
 
         Matcher m;
+        m = Pattern.compile("("+adv_tiempo+"|("+dia_semana+"( "+info_adicional1+"| "+info_adicional2+")?)|"+dia_mes_anio_aux+")").matcher(fecha);
+        m.find();
+        fecha = m.group(); //Se elimina hora_ini si la tuviera
+
         m =  Pattern.compile(adv_tiempo).matcher(fecha);
-
         if(m.find()) {       //Se ha proporcionado un advervio de tiempo (hoy, mañana o pasado mañana)
-
-            fecha = m.group();  //Se elimina hora_ini si la tuviera
 
             mes = Calendar.getInstance().get(Calendar.MONTH);
             dia = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
@@ -294,19 +317,15 @@ public class MainActivity extends AppCompatActivity implements Regex {
             } else if (fecha.equals("pasado mañana")) {
                 dia += 2;
             }
-
-            resultado = dia + " de " + mes + " de " + anio;
         }
         else {
 
             m = Pattern.compile(dia_semana).matcher(fecha);
             if (m.find()) {      //Se ha proporcionado un dia_semana (lunes, martes, etc.)
 
-                fecha = m.group(); //Se elimina hora_ini si la tuviera
-
                 int dia_semana_introducido = -1;
 
-                switch (fecha) {
+                switch (m.group()) {
                     case "lunes": dia_semana_introducido = 2; break;
                     case "martes": dia_semana_introducido = 3; break;
                     case "miércoles": dia_semana_introducido = 4; break;
@@ -317,11 +336,12 @@ public class MainActivity extends AppCompatActivity implements Regex {
                 }
 
                 int dia_semana_actual = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
+
                 mes = Calendar.getInstance().get(Calendar.MONTH);
                 dia = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
                 anio = Calendar.getInstance().get(Calendar.YEAR);
 
-                m = Pattern.compile("( " + info_adicional1 + "| " + info_adicional2 + ")").matcher(fecha);
+                m = Pattern.compile("("+info_adicional1+"|"+info_adicional2+")").matcher(fecha);
                 //AQUI revisar
                 if ((dia_semana_introducido < dia_semana_actual)) {    //Si el dia_semana_introducido ha pasado , cogemos el siguiente (semana siguiente)
                     dia = dia + dia_semana_introducido - dia_semana_actual + 7;  //Cogemos el proximo dia_semana_introducido
@@ -338,15 +358,11 @@ public class MainActivity extends AppCompatActivity implements Regex {
                         dia += 7;
                 }
 
-                resultado = dia + " de " + mes + " de " + anio;
-
             } // FIN -> Se ha proporcionado un dia_semana (lunes, martes, etc.)
             else {
 
                 m = Pattern.compile(dia_mes_anio_aux).matcher(fecha);
                 if (m.find()) {      //Se ha proporcionado un dia_mes_anio_aux (el 5 de enero...)
-
-                    fecha = m.group(); //Se elimina hora_ini si la tuviera
 
                     String [] valores = fecha.split("(del|de)");
 
@@ -355,16 +371,19 @@ public class MainActivity extends AppCompatActivity implements Regex {
 
                     dia = Integer.parseInt(m.group());
 
+                    if(dia==0)dia++;
+
                     mes = -1;
                     anio = -1;
 
-                    if(valores.length==2){  //mes
-                        m = Pattern.compile(numero_mes).matcher(valores[0]);
+                    if(valores.length>=2){  //mes
+                        m = Pattern.compile(numero_mes).matcher(valores[1]);
                         if(m.find()){
 
-                            if(Integer.parseInt(m.group()) > 12 && Integer.parseInt(m.group()) < 1)
+                            if(Integer.parseInt(m.group()) > 12 || Integer.parseInt(m.group()) < 1) {
                                 respuesta += getString(R.string.mes_no_valido);
-                            else
+                                mes = -2;
+                            }else
                                 mes = Integer.parseInt(m.group()) - 1;
                         }
                         else{
@@ -390,17 +409,26 @@ public class MainActivity extends AppCompatActivity implements Regex {
                     }
                     if (valores.length==3) {    //anio
 
+                        m = Pattern.compile(anio_4).matcher(valores[2]);
+                        if(m.find())
+                            anio = Integer.parseInt(m.group());
+                        else{
+                            m = Pattern.compile(anio_2).matcher(valores[2]);
+                            if(m.find())
+                                anio = 2000 + Integer.parseInt(m.group());
+                        }
+
                     }
-
-
-                    //AQUI por desarrollar
-
                 } // FIN -> Se ha proporcionado un dia_mes_anio_aux (el 5 de enero...)
             }
         }
+
+        resultado = dia + " del " + mes + " del " + anio;
         //fuera de los if
         return resultado;
     }
+
+
 
 
 }
