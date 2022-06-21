@@ -194,22 +194,23 @@ public class MainActivity extends AppCompatActivity implements Regex {
     public Boolean crearEvento(){
 
         String respuesta = "";
+        Boolean exito=false;
 
         ArrayList<Calendar> fechas = recogerFecha(data,respuesta);
-        String titulo = recogerTitulo(data,respuesta);
-        ArrayList<String> tags = recogerTags(data,respuesta);
-        String localizacion = regogerLocalizacion(data,respuesta);
+        //String titulo = recogerTitulo(data,respuesta);
+        //ArrayList<String> tags = recogerTags(data,respuesta);
+        //String localizacion = regogerLocalizacion(data,respuesta);
         //AQUI esto en principio sobraria
         if(fechas.isEmpty()){
             respuesta += getString(R.string.fecha_no_encontrada);
         }
-        if(titulo.isEmpty()){
-            respuesta += getString(R.string.titulo_no_encontrada);
-        }
+       // if(titulo.isEmpty()){
+        //    respuesta += getString(R.string.titulo_no_encontrada);
+       // }
 
         if(respuesta.isEmpty()){
             Evento ev = new Evento();
-            Boolean exito=false;
+            exito=true;
             //tengo que pensar como darme cuenta de si tengo que porne 1 a ALL_DAY
             //exito = ev.crearEvento("String title", 1, 1, "String loc", "String tags", 0, 0);
 
@@ -223,9 +224,168 @@ public class MainActivity extends AppCompatActivity implements Regex {
 
         tts.speak(respuesta.trim(), TextToSpeech.QUEUE_ADD, null);
         output.setText(respuesta);
+
+        return exito;
     }
 
-    
+    // Nota: Dependiente de la gramática
+    public ArrayList<Calendar> recogerFecha(String dat, String res){
+
+        ArrayList <Calendar> result= new ArrayList<>();
+
+        Pattern pattern_fecha = Pattern.compile(fecha_franja);
+        Matcher m;
+        m = pattern_fecha.matcher(dat);
+
+        String fecha;   //Contendrá la parte de dat que sea una fecha
+
+        if(m.find()){       //Se ha proporcionado una fecha franja
+
+            //Separar las 2 fechas
+
+            fecha = m.group();
+
+            String [] separador = fecha.split(" (hasta|al)( el)? ");
+
+            String fecha_fin = separador[1];    //fecha_franja_aux2
+            String fecha_ini = separador[0];    //"(de|desde|del)( el)? "+fecha_franja_aux1
+
+            separador = null;
+
+            m = Pattern.compile(fecha_franja_aux1).matcher(fecha_ini);
+            m.find();
+
+            fecha_ini = m.group();      //fecha_franja_aux1
+
+            //Formato <dia> del <numero_mes> del <año>
+            //String = procesarFechaFranjaAux1(fecha_ini)
+            //String = procesarHora(fecha_ini)
+
+            //String = procesarFecha(fecha_fin)
+            //String = procesarHora(fecha_fin)
+
+
+
+        }else{
+            m = Pattern.compile(fecha_unica).matcher(dat);
+            if(m.find()){   //Se ha proporcionado una fecha única
+
+                //AQUI por desarrollar
+            }
+            else
+                res += getString(R.string.fecha_no_encontrada);
+        }
+
+        return result;
+    }
+
+    private String procesarFechaFranjaAux1(String fecha){
+
+        String resultado = "";
+        int mes;
+        int dia;
+        int anio;
+
+        Matcher m;
+        m =  Pattern.compile(adv_tiempo).matcher(fecha);
+
+        if(m.find()) {       //Se ha proporcionado un advervio de tiempo (hoy, mañana o pasado mañana)
+
+            fecha = m.group();  //Se elimina hora_ini si la tuviera
+
+            mes = Calendar.getInstance().get(Calendar.MONTH);
+            dia = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+            anio = Calendar.getInstance().get(Calendar.YEAR);
+
+            if (fecha.equals("mañana")) {
+                dia++;
+            } else if (fecha.equals("pasado mañana")) {
+                dia += 2;
+            }
+
+            resultado = dia + " de " + mes + " de " + anio;
+        }
+        else {
+
+            m = Pattern.compile(dia_semana).matcher(fecha);
+            if (m.find()) {      //Se ha proporcionado un dia_semana (lunes, martes, etc.)
+
+                fecha = m.group(); //Se elimina hora_ini si la tuviera
+
+                int dia_semana_introducido = -1;
+
+                switch (fecha) {
+                    case "lunes": dia_semana_introducido = 2; break;
+                    case "martes": dia_semana_introducido = 3; break;
+                    case "miércoles": dia_semana_introducido = 4; break;
+                    case "jueves": dia_semana_introducido = 5; break;
+                    case "viernes": dia_semana_introducido = 6; break;
+                    case "sábado": dia_semana_introducido = 7; break;
+                    case "domingo": dia_semana_introducido = 1; break;
+                }
+
+                int dia_semana_actual = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
+                mes = Calendar.getInstance().get(Calendar.MONTH);
+                dia = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+                anio = Calendar.getInstance().get(Calendar.YEAR);
+
+                m = Pattern.compile("( " + info_adicional1 + "| " + info_adicional2 + ")").matcher(fecha);
+                //AQUI revisar
+                if ((dia_semana_introducido < dia_semana_actual)) {    //Si el dia_semana_introducido ha pasado , cogemos el siguiente (semana siguiente)
+                    dia = dia + dia_semana_introducido - dia_semana_actual + 7;  //Cogemos el proximo dia_semana_introducido
+                    if(m.find() && dia_semana_introducido == 1)         //Si se especifica el domingo de la semana que viene siendo domingo
+                        dia += 7;
+                }else if(dia_semana_actual == 1){
+                    dia = dia + dia_semana_introducido - dia_semana_actual;
+                    if(m.find() && dia_semana_introducido == 1)         //Si se especifica el domingo de la semana que viene siendo domingo
+                        dia += 7;
+                }
+                else {
+                    dia = dia + dia_semana_introducido - dia_semana_actual;
+                    if(m.find())
+                        dia += 7;
+                }
+
+                resultado = dia + " de " + mes + " de " + anio;
+
+            } // FIN -> Se ha proporcionado un dia_semana (lunes, martes, etc.)
+            else {
+
+                m = Pattern.compile(dia_mes_anio_aux).matcher(fecha);
+                if (m.find()) {      //Se ha proporcionado un dia_mes_anio_aux (el 5 de enero...)
+
+                    fecha = m.group(); //Se elimina hora_ini si la tuviera
+
+                    String [] valores = fecha.split("(del|de)");
+
+                    m = Pattern.compile("\\d{1,2}").matcher(valores[0]);
+                    m.find();
+
+                    dia = Integer. parseInt(m.group());
+
+                    mes = -1;
+                    anio = -1;
+
+                    if(valores.length==2){  //mes
+                        m = Pattern.compile("\\d{1,2}").matcher(valores[0]);
+                        if(m.find()){
+
+                        }
+
+                    }
+                    if (valores.length==3) {    //anio
+
+                    }
+
+
+                    //AQUI por desarrollar
+
+                } // FIN -> Se ha proporcionado un dia_mes_anio_aux (el 5 de enero...)
+            }
+        }
+        //fuera de los if
+        return resultado;
+    }
 
 
 }
