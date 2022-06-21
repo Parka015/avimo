@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements Regex {
     private SpeechRecognizer speechRecognizer;
     private EditText input;
     private EditText output;
+    private String respuesta;
     private ImageView micButton;
     private String data;
     private TextView textView;
@@ -193,20 +194,12 @@ public class MainActivity extends AppCompatActivity implements Regex {
 
     public Boolean crearEvento(){
 
-        String respuesta = "";
         Boolean exito=false;
 
-        ArrayList<Calendar> fechas = recogerFecha(data,respuesta);
-        //String titulo = recogerTitulo(data,respuesta);
-        //ArrayList<String> tags = recogerTags(data,respuesta);
-        //String localizacion = regogerLocalizacion(data,respuesta);
-        //AQUI esto en principio sobraria
-        if(fechas.isEmpty()){
-            respuesta += getString(R.string.fecha_no_encontrada);
-        }
-       // if(titulo.isEmpty()){
-        //    respuesta += getString(R.string.titulo_no_encontrada);
-       // }
+        ArrayList<Calendar> fechas = recogerFecha(data);
+        //String titulo = recogerTitulo(data);
+        //ArrayList<String> tags = recogerTags(data);
+        //String localizacion = regogerLocalizacion(data);
 
         if(respuesta.isEmpty()){
             Evento ev = new Evento();
@@ -219,17 +212,16 @@ public class MainActivity extends AppCompatActivity implements Regex {
             }else{
                 respuesta += getString(R.string.evento_no_creado);
             }
-
         }
-
         tts.speak(respuesta.trim(), TextToSpeech.QUEUE_ADD, null);
         output.setText(respuesta);
 
         return exito;
     }
 
+
     // Nota: Dependiente de la gramática
-    public ArrayList<Calendar> recogerFecha(String dat, String res){
+    public ArrayList<Calendar> recogerFecha(String dat){
 
         ArrayList <Calendar> result= new ArrayList<>();
 
@@ -273,7 +265,7 @@ public class MainActivity extends AppCompatActivity implements Regex {
                 //AQUI por desarrollar
             }
             else
-                res += getString(R.string.fecha_no_encontrada);
+                respuesta += getString(R.string.fecha_no_encontrada);
         }
 
         return result;
@@ -361,17 +353,40 @@ public class MainActivity extends AppCompatActivity implements Regex {
                     m = Pattern.compile("\\d{1,2}").matcher(valores[0]);
                     m.find();
 
-                    dia = Integer. parseInt(m.group());
+                    dia = Integer.parseInt(m.group());
 
                     mes = -1;
                     anio = -1;
 
                     if(valores.length==2){  //mes
-                        m = Pattern.compile("\\d{1,2}").matcher(valores[0]);
+                        m = Pattern.compile(numero_mes).matcher(valores[0]);
                         if(m.find()){
 
+                            if(Integer.parseInt(m.group()) > 12 && Integer.parseInt(m.group()) < 1)
+                                respuesta += getString(R.string.mes_no_valido);
+                            else
+                                mes = Integer.parseInt(m.group()) - 1;
                         }
+                        else{
+                            m = Pattern.compile(nombre_mes).matcher(valores[1]);
+                            if(m.find()){
 
+                                switch (m.group()) {
+                                    case "enero": mes = 0; break;
+                                    case "febrero": mes = 1; break;
+                                    case "marzo": mes = 2; break;
+                                    case "abril": mes = 3; break;
+                                    case "mayo": mes = 4; break;
+                                    case "junio": mes = 5; break;
+                                    case "julio": mes = 6; break;
+                                    case "agosto": mes = 7; break;
+                                    case "septiembre": mes = 8; break;
+                                    case "octubre": mes = 9; break;
+                                    case "noviembre": mes = 10; break;
+                                    case "diciebre": mes = 11; break;
+                                }
+                            }
+                        }
                     }
                     if (valores.length==3) {    //anio
 

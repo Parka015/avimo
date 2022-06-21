@@ -9,14 +9,14 @@ public interface Regex {
     //Expresiones Regulares Fecha
     public static String adv_tiempo = "(hoy|mañana|pasado mañana)";
     public static String dia_semana = "(lunes|martes|miércoles|jueves|viernes|sábado|domingo)";
-    public static String mes = "(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)";
+    public static String nombre_mes = "(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)";
 
     public static String numero_mes = "\\d{1,2}";
     public static String anio_4 = "\\d{4}";
     public static String anio_2 = "\\d{2}";
     public static String info_adicional1 = "de la (próxima|siguiente) semana";
     public static String info_adicional2 = "(de la semana que viene|que viene)";
-    public static String dia_mes_anio = "\\d{1,2} (del|de) ("+mes+"|"+numero_mes+")( (del|de) "+anio_4+"| del "+anio_2+")?";
+    public static String dia_mes_anio = "\\d{1,2} (del|de) ("+nombre_mes+"|"+numero_mes+")( (del|de) "+anio_4+"| del "+anio_2+")?";
 
 
     //Expresiones Regulares Hora
@@ -31,7 +31,7 @@ public interface Regex {
 
     public static String fecha_unica = "("+adv_tiempo+"|("+dia_semana+"( "+info_adicional1+"| "+info_adicional2+")?)|"+dia_mes_anio+")"+"( "+hora_ini+"| "+hora_franja+")?";
 
-    public static String dia_mes_anio_aux = "\\d{1,2}( (del|de) ("+mes+"|"+numero_mes+")" + "( (del|de) "+anio_4+"| del "+anio_2+")?)?";
+    public static String dia_mes_anio_aux = "\\d{1,2}( (del|de) ("+nombre_mes+"|"+numero_mes+")" + "( (del|de) "+anio_4+"| del "+anio_2+")?)?";
     public static String fecha_franja_aux1 = "("+adv_tiempo+"|("+dia_semana+"( "+info_adicional1+"| "+info_adicional2+")?)|"+dia_mes_anio_aux+")"+"( "+hora_ini+")?";
     public static String fecha_franja_aux2 = "("+adv_tiempo+"|("+dia_semana+"( "+info_adicional1+"| "+info_adicional2+")?)|"+dia_mes_anio+")"+"( "+hora_ini+")?";
 
