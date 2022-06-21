@@ -191,6 +191,40 @@ public class MainActivity extends AppCompatActivity implements Regex {
 
     }
 
+    public Boolean crearEvento(){
+
+        String respuesta = "";
+
+        ArrayList<Calendar> fechas = recogerFecha(data,respuesta);
+        String titulo = recogerTitulo(data,respuesta);
+        ArrayList<String> tags = recogerTags(data,respuesta);
+        String localizacion = regogerLocalizacion(data,respuesta);
+        //AQUI esto en principio sobraria
+        if(fechas.isEmpty()){
+            respuesta += getString(R.string.fecha_no_encontrada);
+        }
+        if(titulo.isEmpty()){
+            respuesta += getString(R.string.titulo_no_encontrada);
+        }
+
+        if(respuesta.isEmpty()){
+            Evento ev = new Evento();
+            Boolean exito=false;
+            //tengo que pensar como darme cuenta de si tengo que porne 1 a ALL_DAY
+            //exito = ev.crearEvento("String title", 1, 1, "String loc", "String tags", 0, 0);
+
+            if(exito){
+                respuesta += getString(R.string.evento_creado);
+            }else{
+                respuesta += getString(R.string.evento_no_creado);
+            }
+
+        }
+
+        tts.speak(respuesta.trim(), TextToSpeech.QUEUE_ADD, null);
+        output.setText(respuesta);
+    }
+
     
 
 
