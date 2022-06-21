@@ -4,6 +4,13 @@
     <string name="error_escucha">No te he oido, repite otra vez</string>
     <string name="escuchando">Habla ahora...</string>
 
+
+
+
+    <!-- Texto de crearEvento  -->
+    <string name="fecha_no_encontrada">No se ha encontrado una fecha, introduzca una o un periodo de tiempo para saber cuando crear el evento</string>
+    <string name="titulo_no_encontrada">No se ha encontrado un titulo para el evento, introduzca uno para saber como llamar al evento</string>
+
     <string name="evento_creado">El evento ha sido creado</string>
     <string name="evento_no_creado">No ha sido posible crear el evento</string>
 </resources>

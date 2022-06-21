@@ -23,16 +23,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements Regex {
     public static final Integer RecordAudioRequestCode = 1;
     private SpeechRecognizer speechRecognizer;
     private EditText input;
     private EditText output;
     private ImageView micButton;
-    private ArrayList<String> data;
+    private String data;
     private TextView textView;
 
     private TextToSpeech tts;
@@ -84,8 +87,8 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onResults(Bundle bundle) {
-                data = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
-                input.setText(data.get(0));
+                data = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION).toString().toLowerCase();
+                input.setText(data);
                 textView.setVisibility(View.INVISIBLE);
                 main();
             }
@@ -148,9 +151,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void main(){
-
-        input.setText("Tu has dicho: "+data.toString());
-
+        input.setText("Tu has dicho: "+data);
+        /*
         if (data.toString().toUpperCase().equals("[CREAR EVENTO]"))
         {
             //exito=crearEvento(...)
@@ -167,8 +169,29 @@ public class MainActivity extends AppCompatActivity {
 
         }
         else tts.speak("No entiendo".trim(), TextToSpeech.QUEUE_ADD, null);
+        */
 
+
+
+        Pattern pattern_fecha = Pattern.compile(regex_fecha);
+
+        Matcher m;
+
+        m = pattern_fecha.matcher(data);
+
+        if(m.find()){
+            tts.speak("Se ha encontrado una fecha".trim(), TextToSpeech.QUEUE_ADD, null);
+            output.setText("Se ha encontrado una fecha -> " + m.group());
+        }
+        else{
+            tts.speak("No se ha encontrado una fecha".trim(), TextToSpeech.QUEUE_ADD, null);
+            output.setText("No se ha encontrado una fecha ");
+        }
 
 
     }
+
+    
+
+
 }

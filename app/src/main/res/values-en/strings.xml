@@ -7,4 +7,5 @@
 
     <string name="evento_creado">The event has been created</string>
     <string name="evento_no_creado">The event couldn´t be created</string>
+
 </resources>

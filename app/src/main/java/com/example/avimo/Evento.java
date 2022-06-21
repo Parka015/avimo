@@ -16,7 +16,6 @@ public class Evento extends AppCompatActivity {
     public Boolean crearEvento(String title, long startMillis, long endMillis, String loc,
                                String tags, int all_day, int has_alarm){
 
-
         try {
             final ContentValues event = new ContentValues();
             event.put(CalendarContract.Events.CALENDAR_ID, 3);
