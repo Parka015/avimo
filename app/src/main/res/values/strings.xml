@@ -15,5 +15,8 @@
     <string name="evento_no_creado">No ha sido posible crear el evento.</string>
 
     <string name="mes_no_valido">El mes introducido no existe.</string>
+    <string name="hora_no_valida">He detectado una hora no válida, asi que la he sustituido por 0.</string>
+    <string name="min_no_valido">He detectado unos minutos no válidos, asi que los he sustituido por 0.</string>
+    <string name="fini_mayor_ffin">No es válida esta fecha ya que la fecha de inicio es posterior a la fecha de fin.</string>
 
 </resources>

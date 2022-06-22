@@ -237,6 +237,12 @@ public class MainActivity extends AppCompatActivity implements Regex {
 
         String fecha;   //Contendrá la parte de dat que sea una fecha
 
+        int dia_ini,mes_ini,anio_ini,h_ini,min_ini;
+        dia_ini=mes_ini=anio_ini=h_ini=min_ini=-1;
+
+        int dia_fin,mes_fin,anio_fin,h_fin,min_fin;
+        dia_fin=mes_fin=anio_fin=h_fin=min_fin=-1;
+
         if(m.find()){       //Se ha proporcionado una fecha franja
 
             //Separar las 2 fechas
@@ -256,11 +262,58 @@ public class MainActivity extends AppCompatActivity implements Regex {
             fecha_ini = m.group();      //fecha_franja_aux1
 
             //Formato <dia> del <numero_mes> del <año>
-            String fini = procesarFecha(fecha_ini);
-            //String = procesarHora(fecha_ini)
+            int [] fini = procesarFecha(fecha_ini);
+            int [] h_ini= recogerHora(fecha_ini);
 
-            String ffin = procesarFecha(fecha_fin);
-            //String = procesarHora(fecha_fin)
+            int [] ffin = procesarFecha(fecha_fin);
+            int [] h_fin= recogerHora(fecha_fin);
+
+            Boolean valido=true;
+
+
+            //----- Combinar info fecha ------//
+
+            //Establecer dia
+            dia_ini = fini[0];
+            dia_fin = ffin[0];
+
+            //Establecer mes
+            if(ffin[1] ==-2 )   //mes incorrecto en la fecha final
+                valido = false;
+            else if(fini[2] ==-1 ) //ausencia del mes en la fecha inicio
+                anio_fin = anio_ini = ffin[2];
+            else{
+                anio_ini = fini[2];
+                anio_fin = ffin[2];
+            }
+            if(valido) {
+
+                //Establecer año
+                if (fini[2] == -1 && ffin[2] == -1) {   //No se a proporcionado año en ninguna fecha
+                    anio_fin = anio_ini = Calendar.getInstance().get(Calendar.YEAR);
+                } else if (fini[2] == -1)
+                    anio_fin = anio_ini = ffin[2];
+                else if (ffin[2] == -1)
+                    anio_fin = anio_ini = fini[2];
+                else {
+                    anio_ini = fini[2];
+                    anio_fin = ffin[2];
+                }
+            }
+            /*
+            else if(fini[2] > ffin[2]) {      // La fecha de inicio es posterior a la de fin
+                valido = false;
+                respuesta += getString(R.string.fini_mayor_ffin);
+            */
+
+
+
+
+
+
+
+            //----- Combinar info hora ------//
+
 
             //AQUI BORRAR
             respuesta += "Fecha inicial: "+fini+" Fecha final: "+ffin;
@@ -272,7 +325,7 @@ public class MainActivity extends AppCompatActivity implements Regex {
                 fecha = m.group();
 
                 String fini = procesarFecha(fecha);
-                //String = procesarHora(fecha_ini)
+                //String = recogerHora(fecha_ini)
                 //AQUI por desarrollar
 
                 //AQUI BORRAR
@@ -287,15 +340,146 @@ public class MainActivity extends AppCompatActivity implements Regex {
 
 
     /*
-    Devuelve la fecha contenida en el parámetro fecha con formato "<dia> del <numero_mes> del <año>"
+    return resultado[0]=hora | inicio resultado[1]=min | inicio resultado[2]=hora fin | resultado[3]=min fin
+    En caso de no haber hora devuelve null
+     */
+    private int [] recogerHora(String fecha){
+
+        int [] resultado = null;
+
+        Matcher m;
+        m = Pattern.compile(hora_franja).matcher(fecha);
+
+        String hora_inicio="";
+        String hora_fin="";
+
+        int [] h_ini=null;
+        int [] h_fin=null;
+
+        if(m.find()) {       //Se ha proporcionado una hora franja
+
+            resultado = new int[4];
+
+            //Quedarme con las 2 horas
+            fecha = m.group();
+
+            String[] separador = fecha.split(" (hasta|a)( las| la)? ");
+
+            hora_fin = separador[1];    //hora2
+            hora_inicio = separador[0];    //"(desde|de)( las| la)? "+hora1
+
+            separador = null;
+
+            m = Pattern.compile(hora).matcher(hora_inicio);
+            m.find();
+
+            hora_inicio = m.group();      //hora1
+
+            h_ini = procesarHora(hora_inicio);
+            h_fin = procesarHora(hora_fin);
+
+            resultado[0] = h_ini[0];
+            resultado[1] = h_ini[1];
+            resultado[0] = h_fin[0];
+            resultado[1] = h_fin[1];
+
+        }   // FIN -> Se ha proporcionado una hora franja
+        else{
+            m = Pattern.compile(hora_ini).matcher(fecha);
+            if(m.find()){
+
+                resultado = new int[4];
+
+                m = Pattern.compile(hora).matcher(fecha);
+
+                //Quedarme solo la hora
+                hora_inicio = m.group();
+                h_ini = procesarHora(hora_inicio);
+                h_fin = new int [2];
+                h_fin[0] = 23;
+                h_fin[1] = 59;
+
+                resultado[0] = h_ini[0];
+                resultado[1] = h_ini[1];
+                resultado[0] = h_fin[0];
+                resultado[1] = h_fin[1];
+
+            } // FIN -> Se ha proporcionado una hora unica
+        }
+
+        return resultado;
+    }
+
+
+    /*
+    return h=[0,23] min=[0,59]
+     */
+    private int [] procesarHora(String hora){
+
+        int h = -1;
+        int min = -1;
+
+        Matcher m;
+
+        //Obteniendo hora
+        m = Pattern.compile("\\d{1,2}").matcher(hora);
+        m.find();
+        h = Integer.parseInt(m.group());;
+        if(h<0 || h>23) {
+            h = 0;
+            respuesta += getString(R.string.hora_no_valida);
+        }
+
+        //Obteniendo minutos
+        m = Pattern.compile(info_adicional_minutos).matcher(hora);
+        if(m.find()){   // Se ha proporcionado una "info_adicional_minutos" (y media, y cuarto, y 20...)
+
+            switch (m.group()) {
+                case "y media": min = 30; break;
+                case "y cuarto": min = 15; break;
+                case "menoscuarto": min = 45; h--; break;
+                case "menos cuarto": min = 45; h--; break;
+                default:
+                    m = Pattern.compile("\\d{1,2}").matcher(hora);
+                    m.find();
+                    min = Integer.parseInt(m.group());
+                    if(min<0 || min>59) {
+                        min = 0;
+                        respuesta += getString(R.string.min_no_valido);
+                    }
+                    break;
+            }
+        }       // FIN -> Se ha proporcionado una "info_adicional_minutos"
+        else{
+            m = Pattern.compile("\\d\\d").matcher(hora);
+            if(m.find()){   // FIN -> Se ha proporcionado una "info_adicional5" (:20, :43...)
+                min = Integer.parseInt(m.group());
+                if(min<0 || min>59) {
+                    min = 0;
+                    respuesta += getString(R.string.min_no_valido);
+                }
+            }
+        }
+
+        int [] resultado = new int[2];
+        resultado[0] = h;
+        resultado[1] = min;
+
+        return resultado;
+    }
+
+
+    /*
+    Devuelve la fecha contenida en el parámetro fecha con formato
+    resultado[0]=dia | inicio resultado[1]=mes | inicio resultado[2]=anio
     return dia=[1,99] mes[-2,11] anio=[-1,9999]
         * si el dia introducido es 0 se modificará a 1 del mes que corresponda
         * si mes o anio es -1 es porque no se ha especificado
         * si mes o dia es -2 el dia o mes no es correcto
      */
-    private String procesarFecha(String fecha){
+    private int [] procesarFecha(String fecha){
 
-        String resultado = "";
+        int[] resultado = new int[3];
         int mes = -1;
         int dia = -1;
         int anio = -1;
@@ -422,9 +606,11 @@ public class MainActivity extends AppCompatActivity implements Regex {
                 } // FIN -> Se ha proporcionado un dia_mes_anio_aux (el 5 de enero...)
             }
         }
-
-        resultado = dia + " del " + mes + " del " + anio;
         //fuera de los if
+        resultado[0] = dia;
+        resultado[1] = mes;
+        resultado[2] = anio;
+
         return resultado;
     }
 
