@@ -45,6 +45,10 @@ public interface Regex {
     public static String regex_crear_evento = "(crea|créa)(\\w){0,5} un evento";
     public static String regex_listar_evento = "lista\\w+ los eventos";
 
+    public static String regex_ayuda_crear_evento= "ayuda crear";
+
+    public static String regex_ejemplos_crear_evento= "ejemplos crear";
+
   /*
     // Enums
     enum Menu {

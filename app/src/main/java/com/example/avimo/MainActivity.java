@@ -141,7 +141,7 @@ public class MainActivity extends AppCompatActivity implements Regex {
         });
 
         tts.setPitch(1.0f);
-        tts.setSpeechRate(1.1f);
+        tts.setSpeechRate(0.9f);
 
 
     }
@@ -228,12 +228,13 @@ public class MainActivity extends AppCompatActivity implements Regex {
                 if (m.find()) {     //LISTAR EVENTO
 
 
-                } else if (data.toString().toUpperCase().equals("[AYUDA]")) {
-
-                    //tts.speak("No se ha encontrado una fecha".trim(), TextToSpeech.QUEUE_ADD, null);
-                    //output.setText("No se ha encontrado una fecha ");
-
-                } else tts.speak("No entiendo".trim(), TextToSpeech.QUEUE_ADD, null);
+                } else {        //COMANDO AYUDA EVENTO
+                    m = Pattern.compile("ayuda").matcher(data);
+                    if (m.find()) {
+                        comandoAyuda(data);
+                    }
+                    else tts.speak("No entiendo".trim(), TextToSpeech.QUEUE_ADD, null);
+                }
             }
 
 
@@ -930,6 +931,46 @@ public class MainActivity extends AppCompatActivity implements Regex {
         }
 
         return resultado;
+    }
+
+    public void comandoAyuda(String dat){
+
+        Matcher m;
+        m = Pattern.compile(regex_ayuda_crear_evento).matcher(dat);
+
+        if(m.find()){   //AYUDA CREAR EVENTO
+
+            tts.speak(getString(R.string.comando_ayuda_crear_evento).trim(), TextToSpeech.QUEUE_ADD, null);
+            output.setText(getString(R.string.comando_ayuda_crear_evento));
+
+        }
+        else{
+
+            tts.speak(getString(R.string.comando_ayuda_general).trim(), TextToSpeech.QUEUE_ADD, null);
+            output.setText(getString(R.string.comando_ayuda_general));
+
+        }
+
+    }
+
+    public void comandoEjemplos(String dat){
+
+        Matcher m;
+        m = Pattern.compile(regex_ejemplos_crear_evento).matcher(dat);
+
+        if(m.find()){   //EJEMLOS CREAR EVENTO
+
+            tts.speak(getString(R.string.comando_ejemplos_crear_evento).trim(), TextToSpeech.QUEUE_ADD, null);
+            output.setText(getString(R.string.comando_ejemplos_crear_evento));
+
+        }
+        else{
+
+            //tts.speak(getString(R.string.comando_ayuda_general).trim(), TextToSpeech.QUEUE_ADD, null);
+            //output.setText(getString(R.string.comando_ayuda_general));
+
+        }
+
     }
 
 

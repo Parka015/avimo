@@ -22,6 +22,36 @@
     <string name="fini_mayor_ffin">No es válida esta fecha ya que la fecha de inicio es posterior a la fecha de fin.</string>
 
     <!-- Ayuda  -->
+    <string name="comando_ayuda_general"> Hola, soy Avimo. Esta app permite realizar las siguientes acciones: crear, modificar, borrar y listar eventos.
+    Para obtener información sobre como usar cada acción, dime \"ayuda\", seguido de la acción sobre la que quieres preguntar</string>
+
+    <string name="comando_ayuda_crear_evento">Para crear un evento, necesito al menos una fecha de inicio y un título. Opcionalmente me puedes dar
+        fecha de fin, (si el evento no termina al final del día), y una localización.\n\n
+
+        La fecha admite expresiones como: hoy, mañana o pasado mañana. Los dias de la semana, pudiendo especificar que sean la semana que viene.
+        También admite una fecha especificando el día, el mes y opcionalmente el año si no es el actual.\n\n
+
+        Para el título debes expresar una de las preposiciones \"de\" o \"con\", seguida de las palabras \"título\" o \"nombre\" y a continuación
+        cómo deseas llamar al evento y finaliza con la palabra \"fin\".\n\n
+
+        Para la localización, decir la palabra \"en\", seguido de la localización en cuestión, y finalizando con la palabra "fin". Para ver algunos ejemplos diga \"ejemplos crear\".
+        </string>
+
+
+
+    <!-- Ejemplos  -->
+    <string name="comando_ejemplos_crear_evento">
+        1) Créame un evento con título ir al parque fin mañana a las 17. \n
+        2) Crea un evento de nombre concierto fin el lunes de la semana que viene a las 5 de la tarde. \n
+        3) Creame un evento con título felicitar a paco fin el próximo domingo a las 5 y 5 de la tarde. \n
+        4) Crea un evento de título concierto fin el sábado de la próxima semana. \n
+        5) Crea un evento el sábado de la siguiente semana con título concierto fin. \n
+        6) Creame un evento con nombre trabajo fin el lunes desde las 7 de la mañana a las 3 y 50 de la tarde. \n
+        7) Creame un evento con título ir al medico fin el lunes a las 7 en hospital del carmen fin. \n
+        8) Creame un evento de título prueba fin desde el 5 de enero al 20 de marzo a la 1 de la mañana. \n
+        9) Creame un evento de nombre prueba fin del 5 al 20 de marzo de 2023 a la 1. \n
+        10) Creame un evento del 5 al 10 de nombre periodo exámenes fin en la UGR. \n
+    </string>
 
 
 

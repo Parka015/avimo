@@ -13,21 +13,23 @@
 
         <EditText
             android:id="@+id/avimo_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="389dp"
+            android:layout_height="209dp"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
+            android:inputType="textMultiLine"
             android:padding="10dp"
             android:textAlignment="center"
             android:textColor="@android:color/holo_blue_light"
+            android:textSize="18sp"
             android:textStyle="bold|italic"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintHorizontal_bias="0.48"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.541" />
+            app:layout_constraintVertical_bias="0.459" />
 
         <ImageView
             android:id="@+id/button"
@@ -40,25 +42,26 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.917" />
+            app:layout_constraintVertical_bias="0.924" />
 
         <EditText
             android:id="@+id/text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="403dp"
+            android:layout_height="79dp"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
+            android:inputType="textMultiLine"
             android:hint="@string/hint_edittext"
             android:padding="10dp"
             android:textAlignment="center"
+            android:textSize="18sp"
             android:textStyle="bold|italic"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.713" />
+            app:layout_constraintVertical_bias="0.733" />
 
         <ImageView
             android:id="@+id/imageView"
@@ -66,10 +69,9 @@
             android:layout_height="186dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.497"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.084"
+            app:layout_constraintVertical_bias="0.067"
             app:srcCompat="@drawable/avimo" />
 
         <TextView
@@ -85,7 +87,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.814" />
+            app:layout_constraintVertical_bias="0.822" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
