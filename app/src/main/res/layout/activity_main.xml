@@ -19,6 +19,7 @@
             android:layout_centerVertical="true"
             android:padding="10dp"
             android:textAlignment="center"
+            android:textColor="@android:color/holo_blue_light"
             android:textStyle="bold|italic"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -26,7 +27,7 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.499" />
+            app:layout_constraintVertical_bias="0.541" />
 
         <ImageView
             android:id="@+id/button"
@@ -39,7 +40,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.886" />
+            app:layout_constraintVertical_bias="0.917" />
 
         <EditText
             android:id="@+id/text"
@@ -57,18 +58,18 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.639" />
+            app:layout_constraintVertical_bias="0.713" />
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="224dp"
-            android:layout_height="206dp"
+            android:layout_width="221dp"
+            android:layout_height="186dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.497"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.161"
+            app:layout_constraintVertical_bias="0.084"
             app:srcCompat="@drawable/avimo" />
 
         <TextView
@@ -82,10 +83,9 @@
             android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.504"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.775" />
+            app:layout_constraintVertical_bias="0.814" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

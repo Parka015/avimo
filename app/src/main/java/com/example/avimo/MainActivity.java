@@ -1,11 +1,15 @@
 package com.example.avimo;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.annotation.TargetApi;
+import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -30,16 +34,25 @@ import java.util.regex.Pattern;
 
 
 public class MainActivity extends AppCompatActivity implements Regex {
+
+    // AUDIO
     public static final Integer RecordAudioRequestCode = 1;
+    public static final int MY_PERMISSIONS_REQUEST_WRITE_CALENDAR = 123;
     private SpeechRecognizer speechRecognizer;
+    private TextToSpeech tts;
+
+    // OBJETOS DE SALIDA Y ENTRADA DE TEXTO EN LA PANTALLA
     private EditText input;
     private EditText output;
+
+    // SALIDA Y ENTRADA DE TEXTO
     private String respuesta;
-    private ImageView micButton;
     private String data;
+
+    // OTROS OBJETOS
+    private ImageView micButton;
     private TextView textView;
 
-    private TextToSpeech tts;
 
 
 
@@ -48,7 +61,10 @@ public class MainActivity extends AppCompatActivity implements Regex {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         if(ContextCompat.checkSelfPermission(this,Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED){
-            checkPermission();
+            checkPermissionRecord();
+        }
+        if(ContextCompat.checkSelfPermission(this,Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED){
+            checkPermissionCalendar();
         }
 
         input = findViewById(R.id.text);
@@ -124,8 +140,8 @@ public class MainActivity extends AppCompatActivity implements Regex {
             }
         });
 
-        tts.setPitch(.8f);
-        tts.setSpeechRate(.8f);
+        tts.setPitch(1.0f);
+        tts.setSpeechRate(1.1f);
 
 
     }
@@ -136,7 +152,7 @@ public class MainActivity extends AppCompatActivity implements Regex {
         speechRecognizer.destroy();
     }
 
-    private void checkPermission() {
+    private void checkPermissionRecord() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.RECORD_AUDIO},RecordAudioRequestCode);
         }
@@ -145,84 +161,156 @@ public class MainActivity extends AppCompatActivity implements Regex {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
         if (requestCode == RecordAudioRequestCode && grantResults.length > 0 ){
             if(grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                Toast.makeText(this,"Permission Granted",Toast.LENGTH_SHORT).show();
+                Toast.makeText(this,"Permiso de micrófono aceptado",Toast.LENGTH_SHORT).show();
+        }else
+        if (requestCode == MY_PERMISSIONS_REQUEST_WRITE_CALENDAR && grantResults.length > 0){
+            if(grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                Toast.makeText(this,"Permiso de calendario aceptado",Toast.LENGTH_SHORT).show();
         }
     }
+
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    public boolean checkPermissionCalendar(){
+
+        int currentAPIVersion = Build.VERSION.SDK_INT;
+        if(currentAPIVersion>=android.os.Build.VERSION_CODES.M)
+        {
+            if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.shouldShowRequestPermissionRationale((Activity) MainActivity.this, Manifest.permission.WRITE_CALENDAR)) {
+                    AlertDialog.Builder alertBuilder = new AlertDialog.Builder(MainActivity.this);
+                    alertBuilder.setCancelable(true);
+                    alertBuilder.setTitle("Permission necessary");
+                    alertBuilder.setMessage("Write calendar permission is necessary to write event!!!");
+                    alertBuilder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+                        public void onClick(DialogInterface dialog, int which) {
+                            ActivityCompat.requestPermissions((Activity)MainActivity.this, new String[]{Manifest.permission.WRITE_CALENDAR}, MY_PERMISSIONS_REQUEST_WRITE_CALENDAR);
+                        }
+                    });
+                    AlertDialog alert = alertBuilder.create();
+                    alert.show();
+                } else {
+                    ActivityCompat.requestPermissions((Activity)MainActivity.this, new String[]{Manifest.permission.WRITE_CALENDAR}, MY_PERMISSIONS_REQUEST_WRITE_CALENDAR);
+                }
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            return true;
+        }
+    }
+
 
 //AQUI retocar main que lo he comentado para solo ejecutar crear evento
     public void main(){
-        input.setText("Tu has dicho: "+data);
-        respuesta="";
 
-        /*
-        if (data.toString().toUpperCase().equals("[CREAR EVENTO]"))
-        {
-            //exito=crearEvento(...)
-            //if(exito == true)
-            tts.speak(getString(R.string.evento_creado).trim(), TextToSpeech.QUEUE_ADD, null);
-            //else tts.speak(getString(R.string.evento_no_creado).trim(), TextToSpeech.QUEUE_ADD, null);
-        }
-        else if (data.toString().toUpperCase().equals("[LISTAR EVENTO]")){
+        if(checkPermissionCalendar()){
+            input.setText("Tu has dicho: " + data);
+            respuesta = "";
 
-            //exito=Evento(...)
-            //if(exito == true)
-            tts.speak("Listar evento".trim(), TextToSpeech.QUEUE_ADD, null);
-            //else tts.speak(getString(R.string.evento_no_creado).trim(), TextToSpeech.QUEUE_ADD, null);
+            Pattern pattern_fecha = Pattern.compile(regex_crear_evento);
+            Matcher m = pattern_fecha.matcher(data);
 
-        }
-        else tts.speak("No entiendo".trim(), TextToSpeech.QUEUE_ADD, null);
-        */
+            Boolean exito = false;
+
+            if (m.find()) {      //CREAR EVENTO
+
+                crearEvento();
+
+            } else {
+
+                m = Pattern.compile(regex_listar_evento).matcher(data);
+                if (m.find()) {     //LISTAR EVENTO
 
 
-        /*
-        Pattern pattern_fecha = Pattern.compile(regex_fecha);
+                } else if (data.toString().toUpperCase().equals("[AYUDA]")) {
 
-        Matcher m;
+                    //tts.speak("No se ha encontrado una fecha".trim(), TextToSpeech.QUEUE_ADD, null);
+                    //output.setText("No se ha encontrado una fecha ");
 
-        m = pattern_fecha.matcher(data);
+                } else tts.speak("No entiendo".trim(), TextToSpeech.QUEUE_ADD, null);
+            }
 
-        if(m.find()){
-            tts.speak("Se ha encontrado una fecha".trim(), TextToSpeech.QUEUE_ADD, null);
-            output.setText("Se ha encontrado una fecha -> " + m.group());
-        }
-        else{
-            tts.speak("No se ha encontrado una fecha".trim(), TextToSpeech.QUEUE_ADD, null);
-            output.setText("No se ha encontrado una fecha ");
-        }
-        */
-        crearEvento();
+
+
+            /*
+            Pattern pattern_fecha = Pattern.compile(regex_fecha);
+
+            Matcher m;
+
+            m = pattern_fecha.matcher(data);
+
+            if(m.find()){
+                tts.speak("Se ha encontrado una fecha".trim(), TextToSpeech.QUEUE_ADD, null);
+                output.setText("Se ha encontrado una fecha -> " + m.group());
+            }
+            else{
+                tts.speak("No se ha encontrado una fecha".trim(), TextToSpeech.QUEUE_ADD, null);
+                output.setText("No se ha encontrado una fecha ");
+            }
+            */
+        }else
+            output.setText(getString(R.string.error_permisos));
 
     }
 
-    public Boolean crearEvento(){
+    public void crearEvento(){
 
         Boolean exito=false;
 
         ArrayList<Calendar> fechas = recogerFecha(data);
-        //String titulo = recogerTitulo(data);
-        //ArrayList<String> tags = recogerTags(data);
-        //String localizacion = regogerLocalizacion(data);
-    /*
-        if(respuesta.isEmpty()){
+        String titulo = recogerTitulo(data);
+        String tags = recogerTags(data);
+        String localizacion = recogerLocalizacion(data);
+
+        if(!fechas.isEmpty() && titulo != "" ){
             Evento ev = new Evento();
-            exito=true;
-            //tengo que pensar como darme cuenta de si tengo que porne 1 a ALL_DAY
-            //exito = ev.crearEvento("String title", 1, 1, "String loc", "String tags", 0, 0);
+            exito=false;
+
+            int all_day = 0;
+
+            //Si al fecha de inicio es a las 0:00 y la de fin a las 23:59 ponemos el flag ALL_DAY a 1
+            /*
+            if (fechas.get(0).get(Calendar.HOUR_OF_DAY)==0 && fechas.get(0).get(Calendar.MINUTE)==0 &&
+                    fechas.get(1).get(Calendar.HOUR_OF_DAY)==23 && fechas.get(1).get(Calendar.MINUTE)==59) {
+                all_day = 1;
+                fechas.get(0).set(Calendar.DAY_OF_MONTH,Calendar.DAY_OF_MONTH+1);   //Porque por alguna extraña razón al poner el flag all_day a 1
+                fechas.get(1).set(Calendar.DAY_OF_MONTH,Calendar.DAY_OF_MONTH+1);   // retrasa un dia los eventos
+            }
+            */
+
+            long start_date = fechas.get(0).getTimeInMillis();
+            long finish_date = fechas.get(1).getTimeInMillis();
+            exito = ev.crearEvento(this,titulo, start_date, finish_date, localizacion, tags, all_day, 1);
 
             if(exito){
+                String min_ini = ""+fechas.get(0).get(Calendar.MINUTE);
+                String min_fin = ""+fechas.get(1).get(Calendar.MINUTE);
+                int mes_ini = fechas.get(0).get(Calendar.MONTH)+1;
+                int mes_fin = fechas.get(1).get(Calendar.MONTH)+1;
+
+                if(fechas.get(0).get(Calendar.MINUTE) < 10)
+                    min_ini = ""+0+fechas.get(0).get(Calendar.MINUTE);
+                if(fechas.get(1).get(Calendar.MINUTE) < 10)
+                    min_fin = ""+0+fechas.get(1).get(Calendar.MINUTE);
+
+                respuesta += "Fecha inicial: "+fechas.get(0).get(Calendar.DAY_OF_MONTH)+"/"+ mes_ini+
+                        "/"+ fechas.get(0).get(Calendar.YEAR)+" a las "+fechas.get(0).get(Calendar.HOUR_OF_DAY)+":"+min_ini+
+                        " Fecha final: "+ fechas.get(1).get(Calendar.DAY_OF_MONTH)+"/"+ mes_fin+
+                        "/"+ fechas.get(1).get(Calendar.YEAR)+" a las "+fechas.get(1).get(Calendar.HOUR_OF_DAY)+":"+min_fin+".\n";
                 respuesta += getString(R.string.evento_creado);
             }else{
                 respuesta += getString(R.string.evento_no_creado);
             }
         }
-        */
 
         tts.speak(respuesta.trim(), TextToSpeech.QUEUE_ADD, null);
         output.setText(respuesta);
-
-        return exito;
     }
 
 
@@ -237,11 +325,11 @@ public class MainActivity extends AppCompatActivity implements Regex {
 
         String fecha;   //Contendrá la parte de dat que sea una fecha
 
-        int dia_ini,mes_ini,anio_ini,h_ini,min_ini;
-        dia_ini=mes_ini=anio_ini=h_ini=min_ini=-1;
+        int dia_ini,mes_ini,anio_ini,h_i,min_i;
+        dia_ini=mes_ini=anio_ini=h_i=min_i=-1;
 
-        int dia_fin,mes_fin,anio_fin,h_fin,min_fin;
-        dia_fin=mes_fin=anio_fin=h_fin=min_fin=-1;
+        int dia_fin,mes_fin,anio_fin,h_f,min_f;
+        dia_fin=mes_fin=anio_fin=h_f=min_f=-1;
 
         if(m.find()){       //Se ha proporcionado una fecha franja
 
@@ -249,19 +337,24 @@ public class MainActivity extends AppCompatActivity implements Regex {
 
             fecha = m.group();
 
-            String [] separador = fecha.split(" (hasta|al)( el)? ");
-
-            String fecha_fin = separador[1];    //fecha_franja_aux2
-            String fecha_ini = separador[0];    //"(de|desde|del)( el)? "+fecha_franja_aux1
+  //          String [] separador = fecha.split(" (hasta|al)( el)? ");
+            //Nueva forma de obtener las fecha_franja_aux
+            m = Pattern.compile(fecha_franja_aux).matcher(fecha);
+            m.find();
+            String fecha_ini = m.group();
+            m.find();
+            String fecha_fin = m.group();
+/*
+            String fecha_fin = separador[1];    //fecha_franja_aux
+            String fecha_ini = separador[0];    //"(de|desde|del)( el)? "+fecha_franja_aux
 
             separador = null;
 
-            m = Pattern.compile(fecha_franja_aux1).matcher(fecha_ini);
+            m = Pattern.compile(fecha_franja_aux).matcher(fecha_ini);
             m.find();
 
-            fecha_ini = m.group();      //fecha_franja_aux1
-
-            //Formato <dia> del <numero_mes> del <año>
+            fecha_ini = m.group();      //fecha_franja_aux
+*/
             int [] fini = procesarFecha(fecha_ini);
             int [] h_ini= recogerHora(fecha_ini);
 
@@ -280,12 +373,17 @@ public class MainActivity extends AppCompatActivity implements Regex {
             //Establecer mes
             if(ffin[1] ==-2 )   //mes incorrecto en la fecha final
                 valido = false;
-            else if(fini[2] ==-1 ) //ausencia del mes en la fecha inicio
-                anio_fin = anio_ini = ffin[2];
+            else if (fini[1] == -1 && ffin[1] == -1)
+                mes_fin = mes_ini = Calendar.getInstance().get(Calendar.MONTH);
+            else if(fini[1] ==-1) //ausencia del mes en la fecha inicio
+                mes_fin = mes_ini = ffin[1];
+            else if(ffin[1] ==-1) //ausencia del mes en la fecha final
+                mes_fin = mes_ini = fini[1];
             else{
-                anio_ini = fini[2];
-                anio_fin = ffin[2];
+                mes_ini = fini[1];
+                mes_fin = ffin[1];
             }
+
             if(valido) {
 
                 //Establecer año
@@ -299,24 +397,76 @@ public class MainActivity extends AppCompatActivity implements Regex {
                     anio_ini = fini[2];
                     anio_fin = ffin[2];
                 }
+
+
+                //----- Combinar info hora ------//
+
+
+                if(h_ini != null){
+                    h_i = h_ini[0];
+                    min_i = h_ini[1];
+
+                    if(h_i == -1)   //Si la hora no esta especificada
+                        h_i = 0;
+                    if(min_i == -1)
+                        min_i = 0;
+                }
+                else {
+                    h_i = 0;
+                    min_i = 0;
+                }
+
+                if(h_fin != null){
+                    h_f = h_fin[0];
+                    min_f = h_fin[1];
+
+                    if (h_f == -1 && min_f == -1)
+                        min_f = 59;
+
+                    if(h_f == -1)   //Si la hora no esta especificada
+                        h_f = 23;
+                    else if(min_f == -1)
+                        min_f = 0;
+
+
+                }else {
+                    h_f = 23;
+                    min_f = 59;
+                }
+
+
+                //----- Comprobar que la fecha inicial es anterior a la fecha final ------//
+
+                if(anio_ini > anio_fin)
+                    valido = false;
+                else if (anio_ini == anio_fin)
+                    if (mes_ini > mes_fin)
+                        valido = false;
+                    else if (mes_ini == mes_fin)
+                        if (dia_ini > dia_fin)
+                            valido = false;
+                        else if (dia_ini == dia_fin)
+                            if(h_i > h_f)
+                                valido = false;
+                            else if(h_i == h_f)
+                                if (min_i > min_f)
+                                    valido = false;
+
             }
-            /*
-            else if(fini[2] > ffin[2]) {      // La fecha de inicio es posterior a la de fin
-                valido = false;
+
+            if(valido) {
+                Calendar cal_ini = Calendar.getInstance();
+                cal_ini.set(anio_ini, mes_ini, dia_ini, h_i, min_i);
+                result.add(cal_ini);
+
+                Calendar cal_fin = Calendar.getInstance();
+                cal_fin.set(anio_fin, mes_fin, dia_fin, h_f, min_f);
+                result.add(cal_fin);
+
+            }
+            else
                 respuesta += getString(R.string.fini_mayor_ffin);
-            */
 
-
-
-
-
-
-
-            //----- Combinar info hora ------//
-
-
-            //AQUI BORRAR
-            respuesta += "Fecha inicial: "+fini+" Fecha final: "+ffin;
 
         }else{
             m = Pattern.compile(fecha_unica).matcher(dat);
@@ -324,14 +474,74 @@ public class MainActivity extends AppCompatActivity implements Regex {
 
                 fecha = m.group();
 
-                String fini = procesarFecha(fecha);
-                //String = recogerHora(fecha_ini)
-                //AQUI por desarrollar
+                int [] fec = procesarFecha(fecha);
+                int [] time= recogerHora(fecha);
 
-                //AQUI BORRAR
-                respuesta += "Fecha: "+fini;
-            }
-            else
+                Boolean valido=true;
+
+
+                //----- Combinar info fecha ------//
+                dia_ini = fec[0];
+                mes_ini = fec[1];
+                anio_ini = fec[2];
+
+                if(mes_ini == -2)
+                    valido = false;
+                else if(mes_ini == -1)
+                    mes_ini = Calendar.getInstance().get(Calendar.MONTH);
+
+                if(valido){
+
+                    if(anio_ini == -1)
+                        anio_ini = Calendar.getInstance().get(Calendar.YEAR);
+
+                    //----- Combinar info hora ------//
+                    if(time != null){
+                        if(time[0] > time[2])
+                            valido = false;
+                        else if (time[0] == time[2]){
+                            if(time[1] > time[3])
+                                valido = false;
+                        }
+
+                        h_i = time[0];
+                        min_i = time[1];
+
+                        h_f = time[2];
+                        min_f = time[3];
+
+                        if(min_i == -1)
+                            min_i = 0;
+                        if(min_f == -1)
+                            min_f = 0;
+
+                    }else{
+
+                        h_i = 0;
+                        min_i = 0;
+
+                        h_f = 23;
+                        min_f = 59;
+
+                    }
+
+                    if(valido){
+
+                        Calendar cal_ini = Calendar.getInstance();
+                        cal_ini.set(anio_ini, mes_ini, dia_ini, h_i, min_i);
+                        result.add(cal_ini);
+
+                        Calendar cal_fin = Calendar.getInstance();
+                        cal_fin.set(anio_ini, mes_ini, dia_ini, h_f, min_f);
+                        result.add(cal_fin);
+
+                    }
+
+                }
+                if(!valido)
+                    respuesta += getString(R.string.fini_mayor_ffin);
+
+            }else
                 respuesta += getString(R.string.fecha_no_encontrada);
         }
 
@@ -340,7 +550,7 @@ public class MainActivity extends AppCompatActivity implements Regex {
 
 
     /*
-    return resultado[0]=hora | inicio resultado[1]=min | inicio resultado[2]=hora fin | resultado[3]=min fin
+    return resultado[0]=hora inicio | inicio resultado[1]=min inicio | inicio resultado[2]=hora fin | resultado[3]=min fin
     En caso de no haber hora devuelve null
      */
     private int [] recogerHora(String fecha){
@@ -380,20 +590,26 @@ public class MainActivity extends AppCompatActivity implements Regex {
 
             resultado[0] = h_ini[0];
             resultado[1] = h_ini[1];
-            resultado[0] = h_fin[0];
-            resultado[1] = h_fin[1];
+            resultado[2] = h_fin[0];
+            resultado[3] = h_fin[1];
+
 
         }   // FIN -> Se ha proporcionado una hora franja
         else{
+
             m = Pattern.compile(hora_ini).matcher(fecha);
             if(m.find()){
-
                 resultado = new int[4];
 
+                //Me quedo con la hora_ini
+                fecha = m.group();
+
                 m = Pattern.compile(hora).matcher(fecha);
+                m.find();
 
                 //Quedarme solo la hora
                 hora_inicio = m.group();
+
                 h_ini = procesarHora(hora_inicio);
                 h_fin = new int [2];
                 h_fin[0] = 23;
@@ -401,8 +617,8 @@ public class MainActivity extends AppCompatActivity implements Regex {
 
                 resultado[0] = h_ini[0];
                 resultado[1] = h_ini[1];
-                resultado[0] = h_fin[0];
-                resultado[1] = h_fin[1];
+                resultado[2] = h_fin[0];
+                resultado[3] = h_fin[1];
 
             } // FIN -> Se ha proporcionado una hora unica
         }
@@ -424,7 +640,9 @@ public class MainActivity extends AppCompatActivity implements Regex {
         //Obteniendo hora
         m = Pattern.compile("\\d{1,2}").matcher(hora);
         m.find();
-        h = Integer.parseInt(m.group());;
+
+        h = Integer.parseInt(m.group());
+
         if(h<0 || h>23) {
             h = 0;
             respuesta += getString(R.string.hora_no_valida);
@@ -451,15 +669,23 @@ public class MainActivity extends AppCompatActivity implements Regex {
             }
         }       // FIN -> Se ha proporcionado una "info_adicional_minutos"
         else{
-            m = Pattern.compile("\\d\\d").matcher(hora);
+            m = Pattern.compile(":\\d\\d").matcher(hora);
             if(m.find()){   // FIN -> Se ha proporcionado una "info_adicional5" (:20, :43...)
-                min = Integer.parseInt(m.group());
+                min = Integer.parseInt(m.group().split(":")[1]);
                 if(min<0 || min>59) {
                     min = 0;
                     respuesta += getString(R.string.min_no_valido);
                 }
             }
         }
+
+        //AQUI falta meter el si se pide que sea de la tarde o noche
+        m = Pattern.compile("de la (tarde|noche)").matcher(hora);
+        if(m.find()) {
+            if(h<12)
+                h += 12;
+        }
+
 
         int [] resultado = new int[2];
         resultado[0] = h;
@@ -485,7 +711,7 @@ public class MainActivity extends AppCompatActivity implements Regex {
         int anio = -1;
 
         Matcher m;
-        m = Pattern.compile("("+adv_tiempo+"|("+dia_semana+"( "+info_adicional1+"| "+info_adicional2+")?)|"+dia_mes_anio_aux+")").matcher(fecha);
+        m = Pattern.compile("("+adv_tiempo+"|("+dia_semana+"( "+info_adicional1+"| "+info_adicional2+")?)|"+dia_mes_anio+")").matcher(fecha);
         m.find();
         fecha = m.group(); //Se elimina hora_ini si la tuviera
 
@@ -545,8 +771,8 @@ public class MainActivity extends AppCompatActivity implements Regex {
             } // FIN -> Se ha proporcionado un dia_semana (lunes, martes, etc.)
             else {
 
-                m = Pattern.compile(dia_mes_anio_aux).matcher(fecha);
-                if (m.find()) {      //Se ha proporcionado un dia_mes_anio_aux (el 5 de enero...)
+                m = Pattern.compile(dia_mes_anio).matcher(fecha);
+                if (m.find()) {      //Se ha proporcionado un dia_mes_anio (el 5 de enero...)
 
                     String [] valores = fecha.split("(del|de)");
 
@@ -603,7 +829,7 @@ public class MainActivity extends AppCompatActivity implements Regex {
                         }
 
                     }
-                } // FIN -> Se ha proporcionado un dia_mes_anio_aux (el 5 de enero...)
+                } // FIN -> Se ha proporcionado un dia_mes_anio (el 5 de enero...)
             }
         }
         //fuera de los if
@@ -614,6 +840,97 @@ public class MainActivity extends AppCompatActivity implements Regex {
         return resultado;
     }
 
+    /*
+    return "" en caso de no haber titulo, si lo hay, lo devuelve
+     */
+    public String recogerTitulo(String dat){
+
+        String resultado = "";
+
+        Matcher m;
+        m = Pattern.compile(regex_titulo).matcher(dat);
+
+        if(m.find()){
+
+            //Nos quedamos con toda la parte del título
+            dat = m.group();
+
+            String [] tit = dat.split("(de|con) (título|nombre) ");
+
+            dat = tit[1];   //(("+palabra+"|"+numero+") )+(fin|film)"
+
+            tit = dat.split(" (fin|film)");
+
+            dat = tit[0];   //(("+palabra+"|"+numero+") )
+
+            resultado = dat;
+
+
+        }else
+            respuesta += getString(R.string.titulo_no_encontrado);
+
+        return resultado;
+    }
+
+
+    /*
+    return "" en caso de no haber tags, si lo hay, lo devuelve
+     */
+    public String recogerTags(String dat){
+
+        String resultado = "";
+
+        Matcher m;
+        m = Pattern.compile(regex_tags).matcher(dat);
+
+        if(m.find()) {
+
+            //Nos quedamos con toda la parte del tag
+            dat = m.group();
+
+            String[] tag = dat.split("(tags|tag) ");
+
+            dat = tag[1];   //(("+palabra+" )+y "+palabra+"|("+palabra+") (fin|film))
+
+            tag = dat.split(" (fin|film)");
+
+            dat = tag[0];   //(("+palabra+" )+y "+palabra+"|("+palabra+")
+
+            resultado = dat;
+        }
+
+        return resultado;
+    }
+
+
+    /*
+    return "" en caso de no haber tags, si lo hay, lo devuelve
+     */
+    public String recogerLocalizacion(String dat){
+
+        String resultado = "";
+
+        Matcher m;
+        m = Pattern.compile(regex_localizacion).matcher(dat);
+
+        if(m.find()) {
+
+            //Nos quedamos con toda la parte del tag
+            dat = m.group();
+
+            String[] loc = dat.split("en ");
+
+            dat = loc[1];   //(("+palabra+" )+y "+palabra+"|("+palabra+") (fin|film))
+
+            loc = dat.split(" (fin|film)");
+
+            dat = loc[0];   //(("+palabra+" )+y "+palabra+"|("+palabra+")
+
+            resultado = dat;
+        }
+
+        return resultado;
+    }
 
 
 

@@ -5,12 +5,13 @@
     <string name="error_escucha">No te he oido, repite otra vez.</string>
     <string name="escuchando">Habla ahora...</string>
 
+    <string name="error_permisos">No puedo funcionar sin acceso al calendario ni al micrófono.</string>
 
 
 
     <!-- Texto de crearEvento  -->
     <string name="fecha_no_encontrada">No se ha encontrado una fecha, introduzca una o un periodo de tiempo para saber cuando crear el evento.</string>
-    <string name="titulo_no_encontrada">No se ha encontrado un titulo para el evento, introduzca uno para saber como llamar al evento.</string>
+    <string name="titulo_no_encontrado">No se ha encontrado un titulo para el evento, introduzca uno para saber como llamar al evento.</string>
 
     <string name="evento_creado">El evento ha sido creado.</string>
     <string name="evento_no_creado">No ha sido posible crear el evento.</string>
@@ -19,5 +20,9 @@
     <string name="hora_no_valida">He detectado una hora no válida, asi que la he sustituido por 0.</string>
     <string name="min_no_valido">He detectado unos minutos no válidos, asi que los he sustituido por 0.</string>
     <string name="fini_mayor_ffin">No es válida esta fecha ya que la fecha de inicio es posterior a la fecha de fin.</string>
+
+    <!-- Ayuda  -->
+
+
 
 </resources>

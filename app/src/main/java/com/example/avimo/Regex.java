@@ -3,7 +3,7 @@ package com.example.avimo;
 public interface Regex {
 
     //Expresion regulares básicas
-    public static String palabra = "([a-zA-Z])+";
+    public static String palabra = "([a-zA-ZÀ-ÿ\\u00f1\\u00d1])+";
     public static String numero = "\\d+";
 
     //Expresiones Regulares Fecha
@@ -16,7 +16,7 @@ public interface Regex {
     public static String anio_2 = "\\d{2}";
     public static String info_adicional1 = "de la (próxima|siguiente) semana";
     public static String info_adicional2 = "de la semana que viene";
-    public static String dia_mes_anio = "\\d{1,2} (del|de) ("+nombre_mes+"|"+numero_mes+")( (del|de) "+anio_4+"| del "+anio_2+")?";
+    public static String dia_mes_anio = "\\d{1,2}( (del|de) ("+nombre_mes+"|"+numero_mes+")" + "( (del|de) "+anio_4+"| del "+anio_2+")?)?";
 
 
     //Expresiones Regulares Hora
@@ -31,17 +31,28 @@ public interface Regex {
 
     public static String fecha_unica = "("+adv_tiempo+"|("+dia_semana+"(( "+info_adicional1+"| "+info_adicional2+")| que viene)?)|"+dia_mes_anio+")"+"( "+hora_ini+"| "+hora_franja+")?";
 
-    public static String dia_mes_anio_aux = "\\d{1,2}( (del|de) ("+nombre_mes+"|"+numero_mes+")" + "( (del|de) "+anio_4+"| del "+anio_2+")?)?";
-    public static String fecha_franja_aux1 = "("+adv_tiempo+"|("+dia_semana+"(( "+info_adicional1+"| "+info_adicional2+")| que viene)?)|"+dia_mes_anio_aux+")"+"( "+hora_ini+")?";
-    public static String fecha_franja_aux2 = "("+adv_tiempo+"|("+dia_semana+"(( "+info_adicional1+"| "+info_adicional2+")| que viene)?)|"+dia_mes_anio+")"+"( "+hora_ini+")?";
+    public static String fecha_franja_aux = "("+adv_tiempo+"|("+dia_semana+"(( "+info_adicional1+"| "+info_adicional2+")| que viene)?)|"+dia_mes_anio+")"+"( "+hora_ini+")?";
 
-    public static String fecha_franja = "(del|desde|de)( el)? "+fecha_franja_aux1+" (hasta|al)( el)? "+fecha_franja_aux2;
+    public static String fecha_franja = "(del|desde|de|el)( el)? "+fecha_franja_aux+" (hasta|al|a|ha)( el)? "+fecha_franja_aux;
 
 
     //Expresiones regulares completas
     public static String regex_fecha = "("+fecha_unica+"|"+fecha_franja+")";
-    public static String regex_titulo = "(de|con) (título|nombre) (("+palabra+"|"+numero+") )+fin";
-    public static String regex_localizacion = "localización en (("+palabra+"|"+numero+") )+fin";
-    public static String regex_tags = "(tags|tag) (("+palabra+" )+y "+palabra+"|("+palabra+"))";
+    public static String regex_titulo = "(de|con) (título|nombre) (("+palabra+"|"+numero+") )+(fin|film)";
+    public static String regex_localizacion = "en (("+palabra+"|"+numero+") )+(fin|film)";
+    public static String regex_tags = "(tags|tag) (("+palabra+" )+y "+palabra+"|("+palabra+")) (fin|film)";
 
+    public static String regex_crear_evento = "(crea|créa)(\\w){0,5} un evento";
+    public static String regex_listar_evento = "lista\\w+ los eventos";
+
+  /*
+    // Enums
+    enum Menu {
+        CREAR_EVENTO,
+        MODIFICAR_EVENTO,
+        ELIMINAR_EVENTO,
+        LISTAR_EVENTO,
+        NINGUNO
+    }
+*/
 }

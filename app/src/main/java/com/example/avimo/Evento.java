@@ -1,5 +1,6 @@
 package com.example.avimo;
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.net.Uri;
 import android.os.Build;
@@ -13,12 +14,12 @@ import java.util.TimeZone;
 
 public class Evento extends AppCompatActivity {
 
-    public Boolean crearEvento(String title, long startMillis, long endMillis, String loc,
-                               String tags, int all_day, int has_alarm){
+    public Boolean crearEvento(Activity act, String title, long startMillis, long endMillis, String loc,
+                            String tags, int all_day, int has_alarm){
 
         try {
             final ContentValues event = new ContentValues();
-            event.put(CalendarContract.Events.CALENDAR_ID, 3);
+            event.put(CalendarContract.Events.CALENDAR_ID, 1);
             event.put(CalendarContract.Events.TITLE, title);
             event.put(CalendarContract.Events.DESCRIPTION, tags);
             event.put(CalendarContract.Events.EVENT_LOCATION, loc);
@@ -36,7 +37,7 @@ public class Evento extends AppCompatActivity {
                 baseUri = Uri.parse("content://calendar/events");
             }
 
-            getApplicationContext().getContentResolver().insert(baseUri, event);
+            act.getApplicationContext().getContentResolver().insert(baseUri, event);
 
             //Toast.makeText(getApplicationContext(), "Event Created", Toast.LENGTH_SHORT).show();
 
@@ -45,6 +46,5 @@ public class Evento extends AppCompatActivity {
         }
 
         return true;
-
     }
 }
