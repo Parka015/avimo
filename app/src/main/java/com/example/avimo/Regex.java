@@ -42,12 +42,12 @@ public interface Regex {
     public static String regex_localizacion = "en (("+palabra+"|"+numero+") )+(fin|film)";
     public static String regex_tags = "(tags|tag) (("+palabra+" )+y "+palabra+"|("+palabra+")) (fin|film)";
 
-    public static String regex_crear_evento = "(crea|créa)(\\w){0,5} un evento";
-    public static String regex_listar_evento = "lista\\w+ los eventos";
+    public static String regex_crear_evento = "(crea|créa)(\\w){0,5}( un)? evento";
+    public static String regex_listar_evento = "(lista|lísta)\\w+( los)? eventos";
 
     public static String regex_ayuda_crear_evento= "ayuda crear";
-
-    public static String regex_ejemplos_crear_evento= "ejemplos crear";
+    public static String regex_mas_ayuda_crear_evento= "más ayuda crear";
+    public static String regex_mas_ejemplos_crear_evento= "más ejemplos crear";
 
   /*
     // Enums

@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements Regex {
     public static final int MY_PERMISSIONS_REQUEST_WRITE_CALENDAR = 123;
     private SpeechRecognizer speechRecognizer;
     private TextToSpeech tts;
+    Boolean audio_activo=false;
 
     // OBJETOS DE SALIDA Y ENTRADA DE TEXTO EN LA PANTALLA
     private EditText input;
@@ -70,6 +71,7 @@ public class MainActivity extends AppCompatActivity implements Regex {
         input = findViewById(R.id.text);
         output = findViewById(R.id.avimo_text);
         micButton = findViewById(R.id.button);
+        micButton.setImageResource(R.drawable.microfono);
         textView = findViewById(R.id.textView);
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
 
@@ -100,6 +102,7 @@ public class MainActivity extends AppCompatActivity implements Regex {
             public void onError(int i) {
                 tts.speak(getString(R.string.error_escucha).trim(), TextToSpeech.QUEUE_ADD, null);
                 textView.setVisibility(View.INVISIBLE);
+                audio_activo=false;
             }
 
             @Override
@@ -107,7 +110,9 @@ public class MainActivity extends AppCompatActivity implements Regex {
                 data = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION).toString().toLowerCase();
                 input.setText(data);
                 textView.setVisibility(View.INVISIBLE);
-                main();
+                audio_activo=false;
+                if(data != "")
+                    main();
             }
 
             @Override
@@ -120,11 +125,11 @@ public class MainActivity extends AppCompatActivity implements Regex {
         micButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                if (motionEvent.getAction() == MotionEvent.ACTION_UP){
+                if (audio_activo){
+                    audio_activo=false;
                     speechRecognizer.stopListening();
-                }
-                if (motionEvent.getAction() == MotionEvent.ACTION_DOWN){
-                    micButton.setImageResource(R.drawable.microfono);
+                }else{
+                    audio_activo=true;
                     speechRecognizer.startListening(speechRecognizerIntent);
                 }
 
@@ -141,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements Regex {
         });
 
         tts.setPitch(1.0f);
-        tts.setSpeechRate(0.9f);
+        tts.setSpeechRate(0.8f);
 
 
     }
@@ -233,11 +238,21 @@ public class MainActivity extends AppCompatActivity implements Regex {
                     if (m.find()) {
                         comandoAyuda(data);
                     }
-                    else tts.speak("No entiendo".trim(), TextToSpeech.QUEUE_ADD, null);
+                    else{       //COMANDO MAS AYUDA EVENTO
+                        m = Pattern.compile("más ayuda").matcher(data);
+                        if(m.find()){
+                            comandoMasAyuda(data);
+                        }
+                        else {      //COMANDO MAS EJEMPLOS EVENTO
+                            m = Pattern.compile("más ejemplos").matcher(data);
+                            if (m.find()) {
+                                comandoEjemplos(data);
+                            } else tts.speak("No entiendo".trim(), TextToSpeech.QUEUE_ADD, null);
+                        }
+                    }
+
                 }
             }
-
-
 
             /*
             Pattern pattern_fecha = Pattern.compile(regex_fecha);
@@ -953,15 +968,47 @@ public class MainActivity extends AppCompatActivity implements Regex {
 
     }
 
+    public void comandoMasAyuda(String dat){
+
+        Matcher m;
+        m = Pattern.compile(regex_mas_ayuda_crear_evento).matcher(dat);
+
+        if(m.find()){   //MAS AYUDA CREAR EVENTO
+
+            tts.speak(getString(R.string.comando_mas_ayuda_crear_evento_intro).trim(), TextToSpeech.QUEUE_ADD, null);
+            tts.speak(getString(R.string.comando_mas_ayuda_crear_evento_fecha).trim(), TextToSpeech.QUEUE_ADD, null);
+            tts.speak(getString(R.string.comando_mas_ayuda_crear_evento_titulo).trim(), TextToSpeech.QUEUE_ADD, null);
+            tts.speak(getString(R.string.comando_mas_ayuda_crear_evento_localizacion).trim(), TextToSpeech.QUEUE_ADD, null);
+            output.setText(getString(R.string.comando_mas_ayuda_crear_evento_intro)+getString(R.string.comando_mas_ayuda_crear_evento_fecha)+
+                    getString(R.string.comando_mas_ayuda_crear_evento_titulo)+getString(R.string.comando_mas_ayuda_crear_evento_localizacion));
+
+        }
+        else{
+
+            tts.speak(getString(R.string.comando_ayuda_general).trim(), TextToSpeech.QUEUE_ADD, null);
+            output.setText(getString(R.string.comando_ayuda_general));
+
+        }
+
+    }
+
+
     public void comandoEjemplos(String dat){
 
         Matcher m;
-        m = Pattern.compile(regex_ejemplos_crear_evento).matcher(dat);
+        m = Pattern.compile(regex_mas_ejemplos_crear_evento).matcher(dat);
 
         if(m.find()){   //EJEMLOS CREAR EVENTO
 
-            tts.speak(getString(R.string.comando_ejemplos_crear_evento).trim(), TextToSpeech.QUEUE_ADD, null);
-            output.setText(getString(R.string.comando_ejemplos_crear_evento));
+            tts.speak(getString(R.string.comando_ejemplos_crear_evento_1).trim(), TextToSpeech.QUEUE_ADD, null);
+            tts.speak(getString(R.string.comando_ejemplos_crear_evento_2).trim(), TextToSpeech.QUEUE_ADD, null);
+            tts.speak(getString(R.string.comando_ejemplos_crear_evento_3).trim(), TextToSpeech.QUEUE_ADD, null);
+            tts.speak(getString(R.string.comando_ejemplos_crear_evento_4).trim(), TextToSpeech.QUEUE_ADD, null);
+            tts.speak(getString(R.string.comando_ejemplos_crear_evento_5).trim(), TextToSpeech.QUEUE_ADD, null);
+            tts.speak(getString(R.string.comando_ejemplos_crear_evento_6).trim(), TextToSpeech.QUEUE_ADD, null);
+            output.setText(getString(R.string.comando_ejemplos_crear_evento_1)+getString(R.string.comando_ejemplos_crear_evento_2)+
+                    getString(R.string.comando_ejemplos_crear_evento_3)+getString(R.string.comando_ejemplos_crear_evento_4)+
+                    getString(R.string.comando_ejemplos_crear_evento_5)+getString(R.string.comando_ejemplos_crear_evento_6));
 
         }
         else{
