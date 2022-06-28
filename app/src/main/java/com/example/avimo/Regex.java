@@ -36,14 +36,21 @@ public interface Regex {
     public static String fecha_franja = "(del|desde|de|el)( el)? "+fecha_franja_aux+" (hasta|al|a|ha)( el)? "+fecha_franja_aux;
 
 
-    //Expresiones regulares completas
+    // Expresiones regulares especificas de Listar Eventos
+    public static String info_adicional3 = "esta semana";
+    public static String info_adicional4 = "((próxima|siguiente) semana|semana que viene)";
+
+
+
+    /****** Expresiones regulares completas *****/
+
     public static String regex_fecha = "("+fecha_unica+"|"+fecha_franja+")";
     public static String regex_titulo = "(de|con) (título|nombre) (("+palabra+"|"+numero+") )+(fin|film)";
     public static String regex_localizacion = "en (("+palabra+"|"+numero+") )+(fin|film)";
     public static String regex_tags = "(tags|tag) (("+palabra+" )+y "+palabra+"|("+palabra+")) (fin|film)";
 
     public static String regex_crear_evento = "(crea|créa)(\\w){0,5}( un)? evento";
-    public static String regex_listar_evento = "(lista|lísta)\\w+( los)? eventos";
+    public static String regex_listar_evento = "(lista|lísta)\\w{0,5}( los)? evento";
 
     public static String regex_ayuda_crear_evento= "ayuda crear";
     public static String regex_mas_ayuda_crear_evento= "más ayuda crear";

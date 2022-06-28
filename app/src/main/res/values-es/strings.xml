@@ -10,7 +10,7 @@
 
 
     <!-- Texto de crearEvento  -->
-    <string name="fecha_no_encontrada">No se ha encontrado una fecha, introduzca una o un periodo de tiempo para saber cuando crear el evento.</string>
+    <string name="fecha_no_encontrada">No se ha encontrado una fecha, introduzca una o un periodo de tiempo.</string>
     <string name="titulo_no_encontrado">No se ha encontrado un titulo para el evento, introduzca uno para saber como llamar al evento.</string>
 
     <string name="evento_creado">El evento ha sido creado.</string>
@@ -30,9 +30,10 @@
         fecha de fin y una localización.\n\n
         Ejemplo 1: Créame un evento con título cita médico fin el 5 de marzo a las 4 de la tarde. \n
         Ejemplo 2: Crea un evento de título ir al parque fin mañana de las 9 a las 12. \n
-        Ejemplo 3: Crea evento de nombre fiesta local fin desde el miércoles al martes de la semana que viene. \n
+        Ejemplo 3: Crea evento de nombre fiesta local fin desde el miércoles al martes de la semana que viene. \n\n
 
-        En caso de necesitar una explicación más detallada, dígame \"más ayuda crear\".
+        En caso de necesitar una explicación más detallada, dígame \"más ayuda crear\" o si en su lugar necesita más ejemplos diga
+        \"más ejemplos crear\".
     </string>
 
 
@@ -53,19 +54,24 @@
         </string>
 
     <!-- Ejemplos  -->
-    <!--
-    <string name="comando_ejemplos_crear_evento">
-        1) Créame un evento con título ir al parque fin mañana a las 17. \n
-        2) Crea un evento de nombre concierto fin el lunes de la semana que viene a las 5 de la tarde. \n
-        3) Créame un evento con título felicitar a paco fin el próximo domingo a las 5 y 5 de la tarde. \n
-        4) Crea un evento de título concierto fin el sábado de la próxima semana. \n
-        5) Crea un evento el sábado de la siguiente semana con título concierto fin. \n
-        6) Créame un evento con nombre trabajo fin el lunes desde las 7 de la mañana a las 3 y 50 de la tarde. \n
-        7) Créame un evento con título ir al medico fin el lunes a las 7 en hospital del carmen fin. \n
-        8) Créame un evento de título prueba fin desde el 5 de enero al 20 de marzo a la 1 de la mañana. \n
-        9) Créame un evento de nombre prueba fin del 5 al 20 de marzo de 2023 a la 1. \n
-        10) Créame un evento del 5 al 10 de nombre periodo exámenes fin en la UGR. (cogería el mes y año actual) \n
+    <string name="comando_ejemplos_crear_evento_1">
+        1) Crea un evento el sábado de la siguiente semana con título concierto fin. \n
     </string>
--->
+    <string name="comando_ejemplos_crear_evento_2">
+        2) Créame un evento con título ir al medico fin el lunes a las 7 en hospital del carmen fin. \n
+    </string>
+    <string name="comando_ejemplos_crear_evento_3">
+        3) Créame un evento de título prueba fin desde el 5 de enero al 20 de marzo a la 1 de la mañana. \n
+    </string>
+    <string name="comando_ejemplos_crear_evento_4">
+        4) Créame un evento de nombre prueba fin del 5 al 20 de marzo de 2023 a la 1. \n
+    </string>
+    <string name="comando_ejemplos_crear_evento_5">
+        5) Créame un evento del 5 al 10 de nombre periodo exámenes fin en la UGR. (cogería el mes y año actual). \n
+    </string>
+    <string name="comando_ejemplos_crear_evento_6">
+        6) Crea un evento de título concierto fin el sábado de la próxima semana a las 8 y 50 de la noche. \n
+    </string>
+
 
 </resources>

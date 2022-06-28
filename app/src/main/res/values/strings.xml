@@ -9,7 +9,7 @@
 
 
     <!-- Texto de crearEvento  -->
-    <string name="fecha_no_encontrada">No se ha encontrado una fecha, introduzca una o un periodo de tiempo para saber cuando crear el evento.</string>
+    <string name="fecha_no_encontrada">No se ha encontrado una fecha, introduzca una o un periodo de tiempo.</string>
     <string name="titulo_no_encontrado">No se ha encontrado un titulo para el evento, introduzca uno para saber como llamar al evento.</string>
 
     <string name="evento_creado">El evento ha sido creado.</string>
