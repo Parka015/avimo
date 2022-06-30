@@ -61,8 +61,11 @@ public class MainActivity extends AppCompatActivity implements Regex {
     private TextView textView;
 
     // Variables de modificarEvento
-    String id_evento;
-    Boolean modificando;
+    private String id_evento;
+    private Boolean modificando;
+
+    // Variables de eliminarEvento
+    private Boolean eliminando;
 
 
 
@@ -91,6 +94,9 @@ public class MainActivity extends AppCompatActivity implements Regex {
         // Variables de modificarEvento
         id_evento = "";
         modificando = false;
+
+        // Variables de modificarEvento
+        eliminando = false;
 
 
         final Intent speechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
@@ -266,56 +272,64 @@ public class MainActivity extends AppCompatActivity implements Regex {
 //AQUI retocar main que lo he comentado para solo ejecutar crear evento
     public void main(){
 
-        if(checkPermissionWriteCalendar() || checkPermissionReadCalendar()){
+        if(checkPermissionWriteCalendar() || checkPermissionReadCalendar()) {
             input.setText("Tu has dicho: " + data);
             respuesta = "";
 
-            Pattern pattern_fecha = Pattern.compile(regex_crear_evento);
+            Pattern pattern_fecha = Pattern.compile(regex_eliminar_evento);
             Matcher m = pattern_fecha.matcher(data);
 
-            Boolean exito = false;
 
-            if (m.find() && !modificando) {      //CREAR EVENTO
+            if ((m.find() && !modificando) || eliminando) {      // ELIMINAR EVENTO
 
-                crearEvento();
+                eliminarEvento();
 
             } else {
 
-                m = Pattern.compile(regex_listar_evento).matcher(data);
-                if (m.find() && !modificando) {     //LISTAR EVENTO
+                m = Pattern.compile(regex_crear_evento).matcher(data);
 
-                    listarEventos();
+                if (m.find() && !modificando) {      //CREAR EVENTO
+
+                    crearEvento();
 
                 } else {
-                    m = Pattern.compile(regex_modificar_evento).matcher(data);
-                    if (m.find() || modificando) {     //MODIFICAR EVENTO
 
-                        modificarEvento();
+                    m = Pattern.compile(regex_listar_evento).matcher(data);
+                    if (m.find() && !modificando) {     //LISTAR EVENTO
+
+                        listarEventos();
 
                     } else {
+                        m = Pattern.compile(regex_modificar_evento).matcher(data);
+                        if (m.find() || modificando) {     //MODIFICAR EVENTO
 
-                        m = Pattern.compile(regex_buscar_evento).matcher(data);
-                        if (m.find() ) {     //BUSCAR EVENTO
-
-                            String tit =recogerTitulo(m.group(),false);
-                            buscarEvento(tit);
-                            output.setText(respuesta);
+                            modificarEvento();
 
                         } else {
 
-                            m = Pattern.compile("ayuda").matcher(data);
-                            if (m.find()) {             //COMANDO AYUDA EVENTO
-                                comandoAyuda(data);
-                            } else {       //COMANDO MAS AYUDA EVENTO
-                                m = Pattern.compile("más ayuda").matcher(data);
-                                if (m.find()) {
-                                    comandoMasAyuda(data);
-                                } else {      //COMANDO MAS EJEMPLOS EVENTO
-                                    m = Pattern.compile("más ejemplos").matcher(data);
+                            m = Pattern.compile(regex_buscar_evento).matcher(data);
+                            if (m.find()) {     //BUSCAR EVENTO
+
+                                String tit = recogerTitulo(m.group(), false);
+                                buscarEvento(tit);
+                                output.setText(respuesta);
+
+                            } else {
+
+                                m = Pattern.compile("ayuda").matcher(data);
+                                if (m.find()) {             //COMANDO AYUDA EVENTO
+                                    comandoAyuda(data);
+                                } else {       //COMANDO MAS AYUDA EVENTO
+                                    m = Pattern.compile("más ayuda").matcher(data);
                                     if (m.find()) {
-                                        comandoEjemplos(data);
-                                    } else
-                                        tts.speak("No entiendo".trim(), TextToSpeech.QUEUE_ADD, null);
+                                        comandoMasAyuda(data);
+                                    } else {      //COMANDO MAS EJEMPLOS EVENTO
+                                        m = Pattern.compile("más ejemplos").matcher(data);
+                                        if (m.find()) {
+                                            comandoEjemplos(data);
+                                        } else
+                                            tts.speak("No entiendo".trim(), TextToSpeech.QUEUE_ADD, null);
+                                    }
                                 }
                             }
                         }
@@ -403,26 +417,13 @@ public class MainActivity extends AppCompatActivity implements Regex {
 
         ArrayList<Calendar> fechas = recogerFechaListarEvento(data);
 
-        if(!fechas.isEmpty()) {
+        ArrayList<String> fechas_ini = new ArrayList<>();
+        ArrayList<String> nombres_eventos = new ArrayList<>();
 
-            long startMillis = fechas.get(0).getTimeInMillis();
-            long endMillis = fechas.get(1).getTimeInMillis();
+        Evento ev = new Evento();
+        ev.listarEventos(this, fechas, nombres_eventos, fechas_ini);
 
-            // Construct the query with the desired date range.
-            Uri.Builder builder = CalendarContract.Instances.CONTENT_URI.buildUpon();
-            ContentUris.appendId(builder, startMillis);
-            ContentUris.appendId(builder, endMillis);
-
-            Cursor cursor = MainActivity.this.getContentResolver()
-                    .query(
-                            builder.build(),
-                            new String[]{"calendar_id", "title", "description",
-                                    "dtstart"}, null,
-                            null, "dtstart");
-
-            cursor.moveToFirst();
-            // fetching calendars name
-            String CNames[] = new String[cursor.getCount()];
+        if(!nombres_eventos.isEmpty()) {
 
             Calendar calendar;
             DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
@@ -432,12 +433,10 @@ public class MainActivity extends AppCompatActivity implements Regex {
             dia.set(Calendar.DAY_OF_YEAR, dia.get(Calendar.DAY_OF_YEAR)-1);
 
 
-            for (int i = 0; i < CNames.length; i++) {
-
-                //nameOfEvent.add(cursor.getString(1));
+            for (int i = 0; i < nombres_eventos.size(); i++) {
 
                 calendar = Calendar.getInstance();
-                calendar.setTimeInMillis(Long.parseLong(cursor.getString(3)));
+                calendar.setTimeInMillis(Long.parseLong(fechas_ini.get(i)));
 
 
                 if (dia.get(Calendar.DAY_OF_YEAR) != calendar.get(Calendar.DAY_OF_YEAR)) {
@@ -450,23 +449,26 @@ public class MainActivity extends AppCompatActivity implements Regex {
                 if (calendar.get(Calendar.MINUTE) < 10)
                     minutos = "0" + calendar.get(Calendar.MINUTE);
 
-                tts.speak(cursor.getString(1) + " a las " + calendar.get(Calendar.HOUR_OF_DAY) + ":" + minutos + "\n".trim(), TextToSpeech.QUEUE_ADD, null);
-                respuesta += cursor.getString(1) + " a las " + calendar.get(Calendar.HOUR_OF_DAY) + ":" + minutos + "\n";
-
-                cursor.moveToNext();
+                tts.speak(nombres_eventos.get(i) + " a las " + calendar.get(Calendar.HOUR_OF_DAY) + ":" + minutos + "\n".trim(), TextToSpeech.QUEUE_ADD, null);
+                respuesta += nombres_eventos.get(i) + " a las " + calendar.get(Calendar.HOUR_OF_DAY) + ":" + minutos + "\n";
 
             }
+
+        }else{
+
+            tts.speak(getString(R.string.no_hay_eventos).trim(), TextToSpeech.QUEUE_ADD, null);
+            respuesta += getString(R.string.no_hay_eventos);
+
         }
 
         output.setText(respuesta);
-
 
     }
 
 
     public void modificarEvento(){
 
-        if(!data.equals("no")) {
+        if(!data.equals("[si]")) {
 
             if(!modificando){
 
@@ -478,7 +480,7 @@ public class MainActivity extends AppCompatActivity implements Regex {
 
                     //Notificar de que ya se puede especificar que atributos del evento cambiar
                     tts.speak(getString(R.string.modificar_evento_encontrado).trim(), TextToSpeech.QUEUE_ADD, null);
-                    respuesta += getString(R.string.modificar_evento_encontrado);
+                    respuesta += ".\n"+getString(R.string.modificar_evento_encontrado);
 
                     modificando = true;
                     id_evento = identificador;
@@ -494,24 +496,73 @@ public class MainActivity extends AppCompatActivity implements Regex {
 
                 if (fechas.isEmpty() && titulo == "" && tags == "" && localizacion == "") {
 
-                    //Notificar de que no se ha actualizado nada
-                    tts.speak(getString(R.string.modificar_evento_encontrado).trim(), TextToSpeech.QUEUE_ADD, null);
-                    respuesta += getString(R.string.modificar_evento_encontrado);
-                    //Preguntar si qui quiere modificar algo más, en caso contrario decir no
+                    tts.speak(getString(R.string.modificar_evento_ningun_cambio).trim(), TextToSpeech.QUEUE_ADD, null);
+                    respuesta += getString(R.string.modificar_evento_ningun_cambio);
 
                 }else {
 
                     // realizar los cambios
 
+                    long startMillis = -1;
+                    long endMillis = -1;
+
+                    if(fechas.size() == 2){
+                        startMillis = fechas.get(0).getTimeInMillis();
+                        endMillis = fechas.get(1).getTimeInMillis();
+                    }
+
+                    Evento ev = new Evento();
+                    ev.modificarEvento(this,id_evento,titulo,startMillis,
+                            endMillis, localizacion, tags);
+
                     //Notificar de los cambios
+                    if(titulo !=""){
+                        tts.speak(getString(R.string.cambio_titulo)+" \""+titulo+"\".".trim(), TextToSpeech.QUEUE_ADD, null);
+                        respuesta += getString(R.string.cambio_titulo)+" \""+titulo+"\".";
+                    }
+
+                    if(fechas.size()==2){
+
+                        String minutos = "" + fechas.get(0).get(Calendar.MINUTE);
+                        if (fechas.get(0).get(Calendar.MINUTE) < 10)
+                            minutos = "0" + fechas.get(0).get(Calendar.MINUTE);
+
+                        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+
+                        tts.speak(getString(R.string.cambio_fecha)+" "+formatter.format(fechas.get(0).getTime())+
+                                " a las " + fechas.get(0).get(Calendar.HOUR_OF_DAY)
+                                + ":" + minutos+".".trim(), TextToSpeech.QUEUE_ADD, null);
+
+                        respuesta += getString(R.string.cambio_fecha)+" "+formatter.format(fechas.get(0).getTime())+
+                                " a las " + fechas.get(0).get(Calendar.HOUR_OF_DAY) + ":" + minutos+".";
+                    }
+
+                    if(localizacion !=""){
+                        tts.speak(getString(R.string.cambio_localizacion)+" \""+localizacion+"\".".trim(), TextToSpeech.QUEUE_ADD, null);
+                        respuesta += getString(R.string.cambio_localizacion)+" \""+localizacion+"\".";
+                    }
+
+                    if(tags !=""){
+                        tts.speak(getString(R.string.cambio_tag)+" \""+tags+"\".".trim(), TextToSpeech.QUEUE_ADD, null);
+                        respuesta += getString(R.string.cambio_tag)+" \""+tags+"\".";
+                    }
+
+
 
                     //Preguntar si qui quiere modificar algo más, en caso contrario decir no
 
+                    tts.speak(getString(R.string.modificar_evento_pregunta_final).trim(), TextToSpeech.QUEUE_ADD, null);
+                    respuesta += getString(R.string.modificar_evento_pregunta_final);
+
                 }
+
+
             }
 
         }else{
             //Notificar fin de modificar
+            tts.speak(getString(R.string.modificar_evento_fin).trim(), TextToSpeech.QUEUE_ADD, null);
+            respuesta += getString(R.string.modificar_evento_fin);
             modificando = false;
             id_evento = "";
         }
@@ -520,69 +571,80 @@ public class MainActivity extends AppCompatActivity implements Regex {
     }
 
 
-    public String buscarEvento(String titulo){
+    public void eliminarEvento(){
 
-        String id = "";
+        if (!eliminando) {
+            String tit_ev = recogerTitulo(data, false);
 
-        long time = Calendar.getInstance().getTimeInMillis();
-        int prox_2_anio = Calendar.getInstance().get(Calendar.YEAR)+2;
-        Calendar cal_fin = Calendar.getInstance();
-        cal_fin.set(Calendar.YEAR,prox_2_anio);
+            id_evento = buscarEvento(tit_ev);  //notificar desde dentro de la funcion el nombre y la fecha de inicio del evento
+            if(id_evento != "") {
 
-        // Construct the query with the desired date range.
-        Uri.Builder builder = CalendarContract.Instances.CONTENT_URI.buildUpon();
-        ContentUris.appendId(builder, Calendar.getInstance().getTimeInMillis());
-        ContentUris.appendId(builder, cal_fin.getTimeInMillis());
+                eliminando = true;
 
-        Cursor cursor = MainActivity.this.getContentResolver()
-                .query(
-                        builder.build(),
-                        new String[] { "event_id", "title","dtstart"},
-                        null,
-                        null, "dtstart");
+                //Notificar si se debe borrar el evento
+                tts.speak(getString(R.string.eliminar_evento_encontrado).trim(), TextToSpeech.QUEUE_ADD, null);
+                respuesta += ".\n"+getString(R.string.eliminar_evento_encontrado);
+            }
+        }
+        else{
 
-        cursor.moveToFirst();
-        // fetching calendars name
-        String CNames[] = new String[cursor.getCount()];
+            if(data.equals("[si]")){
 
+                Evento ev = new Evento();
 
-        Calendar calendar;
-        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+                ev.eliminarEvento(this,id_evento);
 
-        String minutos;
-        Calendar dia = Calendar.getInstance();
+                tts.speak(getString(R.string.evento_eliminado).trim(), TextToSpeech.QUEUE_ADD, null);
+                respuesta += getString(R.string.evento_eliminado);
 
-        Boolean encontrado = false;
+                id_evento = "";
+                eliminando = false;
 
+            }else if(data.equals("[no]")){
 
-        for (int i = 0; i < CNames.length && !encontrado; i++) {
+                tts.speak(getString(R.string.evento_no_eliminado).trim(), TextToSpeech.QUEUE_ADD, null);
+                respuesta += getString(R.string.evento_no_eliminado);
 
-            if(titulo.equals(cursor.getString(1).toLowerCase()) ) {
+                id_evento = "";
+                eliminando = false;
 
-                calendar = Calendar.getInstance();
-                calendar.setTimeInMillis(Long.parseLong(cursor.getString(2)));
+            }else{
 
-                minutos = "" + calendar.get(Calendar.MINUTE);
-                if (calendar.get(Calendar.MINUTE) < 10)
-                    minutos = "0" + calendar.get(Calendar.MINUTE);
+                tts.speak(getString(R.string.eliminar_evento_no_respondido).trim(), TextToSpeech.QUEUE_ADD, null);
+                respuesta += getString(R.string.eliminar_evento_no_respondido);
 
-                tts.speak(getString(R.string.evento_encontrado)+" "+cursor.getString(1)+
-                        " el "+ formatter.format(calendar.getTime())+
-                        " a las " + calendar.get(Calendar.HOUR_OF_DAY) + ":" + minutos.trim(), TextToSpeech.QUEUE_ADD, null);
-
-                respuesta += getString(R.string.evento_encontrado)+" "+cursor.getString(1)+
-                        " el "+formatter.format(calendar.getTime())+
-                        " a las " + calendar.get(Calendar.HOUR_OF_DAY) + ":" + minutos;
-
-                id = cursor.getString(0);
-                encontrado = true;
-
-            }else
-                cursor.moveToNext();
+            }
 
         }
 
-        if(!encontrado){
+        output.setText(respuesta);
+    }
+
+
+    public String buscarEvento(String titulo){
+
+        Calendar cal_ini = Calendar.getInstance();
+        Evento ev = new Evento();
+        String id = ev.buscarEvento(this, titulo, cal_ini);
+
+        if(id != ""){
+
+            String minutos = "" + cal_ini.get(Calendar.MINUTE);
+            if (cal_ini.get(Calendar.MINUTE) < 10)
+                minutos = "0" + cal_ini.get(Calendar.MINUTE);
+
+            DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+
+            tts.speak(getString(R.string.evento_encontrado)+" "+titulo+
+                    " el "+ formatter.format(cal_ini.getTime())+
+                    " a las " + cal_ini.get(Calendar.HOUR_OF_DAY) + ":" + minutos.trim(), TextToSpeech.QUEUE_ADD, null);
+
+            respuesta += getString(R.string.evento_encontrado)+" "+titulo+
+                    " el "+formatter.format(cal_ini.getTime())+
+                    " a las " + cal_ini.get(Calendar.HOUR_OF_DAY) + ":" + minutos;
+
+
+        }else{
             tts.speak(getString(R.string.evento_no_encontrado)+" "+titulo.trim(), TextToSpeech.QUEUE_ADD, null);
             respuesta += getString(R.string.evento_no_encontrado)+" "+titulo;
         }
@@ -737,6 +799,14 @@ public class MainActivity extends AppCompatActivity implements Regex {
 
 
         }else{
+            m = Pattern.compile(regex_titulo).matcher(dat); //Para evitar que tome como fechas posibles numeros en el titulo
+            if(m.find())
+                dat.replace(m.group(),"");
+
+            m = Pattern.compile(regex_localizacion).matcher(dat);   //Para evitar que tome como fechas posibles numeros en la loc
+            if(m.find())
+                dat.replace(m.group(),"");
+
             m = Pattern.compile(fecha_unica).matcher(dat);
             if(m.find()){   //Se ha proporcionado una fecha única
 
@@ -811,6 +881,7 @@ public class MainActivity extends AppCompatActivity implements Regex {
 
             }else if(verbose)
                 respuesta += getString(R.string.fecha_no_encontrada);
+
         }
 
         return result;

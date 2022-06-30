@@ -21,22 +21,39 @@
     <string name="fini_mayor_ffin">No es válida esta fecha ya que la fecha de inicio es posterior a la fecha de fin.</string>
 
 
+
+    <!-- Texto de listarEventos  -->
+    <string name="no_hay_eventos">No se ha encontrado eventos en esta franja de tiempo.</string>
+
+
+
     <!-- Texto de buscarEvento  -->
     <string name="evento_encontrado">Se ha encontrado el evento con titulo</string>
     <string name="evento_no_encontrado">No se ha encontrado el evento con titulo</string>
 
 
-    <!-- Texto de modificarEvento  -->
-    <string name="modificar_evento_encontrado">Dígame los cambios que desea realizar. En caso de querer cancelar diga \"no\"</string>
-    <string name="ningun_cambio_realizado">No se ha modificado nada del evento. En caso de querer cancelar diga \"no\"</string>
 
-    <string name="cambio_fecha">Se cambió la fecha a</string>
+    <!-- Texto de eliminarEvento  -->
+    <string name="eliminar_evento_encontrado">¿Esta seguro de que desea borrar el evento? responda \"si\" o \"no\".</string>
+    <string name="evento_eliminado">El evento ha sido borrado.</string>
+    <string name="evento_no_eliminado">El evento no ha sido borrado.</string>
+    <string name="eliminar_evento_no_respondido">No me ha confirmado si debo borrar el evento, responda \"si\" o \"no\".</string>
+
+
+
+
+    <!-- Texto de modificarEvento  -->
+    <string name="modificar_evento_encontrado">Dígame los cambios que desea realizar. En caso de querer cancelar diga \"si\"</string>
+    <string name="modificar_evento_ningun_cambio">No se ha modificado nada del evento. En caso de querer cancelar diga \"si\"</string>
+
+    <string name="cambio_fecha">Se cambió la fecha al</string>
     <string name="cambio_titulo">Se cambió el título a</string>
     <string name="cambio_tag">Se cambió los tags a</string>
     <string name="cambio_localizacion">Se cambió la localización a</string>
 
     <string name="modificar_evento_pregunta_final">¿Desea realizar más cambios? Si es así dígame los cambios que desea realizar.
-    En caso de haber acabado diga \"no\"</string>
+    Si lo que desea es finalizar diga \"si\"</string>
+    <string name="modificar_evento_fin">Se ha terminado de modificar el evento.</string>
 
 
 
