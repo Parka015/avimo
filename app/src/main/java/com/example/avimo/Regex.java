@@ -50,7 +50,9 @@ public interface Regex {
     public static String regex_tags = "(tags|tag) (("+palabra+" )+y "+palabra+"|("+palabra+")) (fin|film)";
 
     public static String regex_crear_evento = "(crea|créa)(\\w){0,5}( un)? evento";
-    public static String regex_listar_evento = "(lista|lísta)\\w{0,5}( los)? evento";
+    public static String regex_listar_evento = "(lista|lísta)\\w{0,5}( me)?( los)? evento";
+    public static String regex_modificar_evento = "(modifica|modifíca)\\w{0,5}( me)?( el)? evento "+regex_titulo;
+    public static String regex_buscar_evento = "(busca|búsca)\\w{0,5}( me)?( el| un)? evento "+regex_titulo;
 
     public static String regex_ayuda_crear_evento= "ayuda crear";
     public static String regex_mas_ayuda_crear_evento= "más ayuda crear";

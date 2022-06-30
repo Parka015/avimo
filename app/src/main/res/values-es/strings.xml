@@ -21,6 +21,26 @@
     <string name="min_no_valido">He detectado unos minutos no válidos, asi que los he sustituido por 0.</string>
     <string name="fini_mayor_ffin">No es válida esta fecha ya que la fecha de inicio es posterior a la fecha de fin.</string>
 
+
+    <!-- Texto de buscarEvento  -->
+    <string name="evento_encontrado">Se ha encontrado el evento con titulo</string>
+    <string name="evento_no_encontrado">No se ha encontrado el evento con titulo</string>
+
+
+    <!-- Texto de modificarEvento  -->
+    <string name="modificar_evento_encontrado">Dígame los cambios que desea realizar. En caso de querer cancelar diga \"no\"</string>
+    <string name="ningun_cambio_realizado">No se ha modificado nada del evento. En caso de querer cancelar diga \"no\"</string>
+
+    <string name="cambio_fecha">Se cambió la fecha a</string>
+    <string name="cambio_titulo">Se cambió el título a</string>
+    <string name="cambio_tag">Se cambió los tags a</string>
+    <string name="cambio_localizacion">Se cambió la localización a</string>
+
+    <string name="modificar_evento_pregunta_final">¿Desea realizar más cambios? Si es así dígame los cambios que desea realizar.
+    En caso de haber acabado diga \"no\"</string>
+
+
+
     <!-- AYUDA  -->
     <string name="comando_ayuda_general"> Hola, soy Avimo. Esta app permite realizar las siguientes acciones: crear, modificar, borrar y listar eventos.
     Para obtener información sobre como usar cada acción, dime \"ayuda\", seguido de la acción sobre la que quieres preguntar</string>
