@@ -59,8 +59,59 @@
 
 
     <!-- AYUDA  -->
-    <string name="comando_ayuda_general"> Hola, soy Avimo. Esta app permite realizar las siguientes acciones: crear, modificar, borrar y listar eventos.
+    <string name="comando_ayuda_general"> Hola, soy Avimo. Esta app permite realizar las siguientes acciones: crear, modificar, eliminar, buscar y listar eventos.
     Para obtener información sobre como usar cada acción, dime \"ayuda\", seguido de la acción sobre la que quieres preguntar</string>
+
+
+    <!-- Ayuda listar evento  -->
+    <string name="comando_ayuda_listar_evento">Para listar los eventos de una franja de tiempo, necesito que me diga o un dia concreto
+        o una franja de tiempo, (por ejemplo \"esta semana\").\n\n
+
+        Ejemplo 1: Lista eventos de la semana que viene. \n
+        Ejemplo 2: Lístame los eventos de mañana. \n
+        Ejemplo 3: Lista los eventos desde el miércoles al viernes. \n\n
+
+        La fecha sigue las mismas reglas que en \"crear evento\", por lo que si necesita más información de qué fechas entiendo, diga
+        \"más ayuda crear\".
+    </string>
+
+
+    <!-- Ayuda buscar evento  -->
+    <string name="comando_ayuda_buscar_evento">Para buscar cuando ocurrirá un evento, debe proporcionarme el título de este.
+        Si no sabe el título, será mejor buscarlo manualmente a través de la función de \"listar eventos\".\n\n
+
+        Ejemplo 1: Busca evento con título cita con el médico fin. \n
+        Ejemplo 2: Búscame el evento de nombre ir al parque fin. \n
+
+        El título sigue las mismas reglas que en \"crear evento\", por lo que si necesita más información de cómo especificar el
+        título, diga \"más ayuda crear\".
+    </string>
+
+
+    <!-- Ayuda modificar evento  -->
+    <string name="comando_ayuda_modificar_evento">Para modificar un evento, debe proporcionarme el título de este.\n\n
+
+        Ejemplo 1: Modificar evento con título cita con el médico fin. \n
+        Ejemplo 2: Modifícame el evento de nombre ir al parque fin. \n
+
+        Posteriormente se entrará en el modo de modificar el evento, y solo tendrá que proporcionar un título,
+        fecha,localización o tag nuevo.
+
+        El título, fecha, localización y tag siguen las mismas reglas que en \"crear evento\", por lo que si necesita más información de cómo especificar
+        cada atributo, diga \"más ayuda crear\".
+    </string>
+
+
+    <!-- Ayuda eliminar evento  -->
+    <string name="comando_ayuda_eliminar_evento">Para eliminar un evento, debe proporcionarme el título de este.\n\n
+
+        Ejemplo 1: Eliminar evento con título cita con el médico fin. \n
+        Ejemplo 2: Elimina el evento de nombre ir al parque fin. \n
+
+        El título sigue las mismas reglas que en \"crear evento\", por lo que si necesita más información de cómo especificar el
+        título, diga \"más ayuda crear\".
+    </string>
+
 
     <!-- Ayuda crear evento  -->
     <string name="comando_ayuda_crear_evento">Para crear un evento, necesito al menos una fecha de inicio y un título. Opcionalmente me puedes dar

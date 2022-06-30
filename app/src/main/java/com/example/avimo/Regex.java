@@ -55,6 +55,16 @@ public interface Regex {
     public static String regex_buscar_evento = "(busca|búsca)\\w{0,5}( me)?( el| un)? evento "+regex_titulo;
     public static String regex_eliminar_evento = "(elimina|elimí)\\w{0,5}( me)?( el| un)? evento "+regex_titulo;
 
+
+    /****** AYUDA *****/
+
+    public static String regex_ayuda_listar_evento= "ayuda( a)? (listar|alistar)";
+    public static String regex_ayuda_buscar_evento= "ayuda( a)? buscar";
+    public static String regex_ayuda_modificar_evento= "ayuda( a)? modificar";
+    public static String regex_ayuda_eliminar_evento= "ayuda( a)? eliminar";
+
+
+    //Ayuda crear evento
     public static String regex_ayuda_crear_evento= "ayuda crear";
     public static String regex_mas_ayuda_crear_evento= "más ayuda crear";
     public static String regex_mas_ejemplos_crear_evento= "más ejemplos crear";

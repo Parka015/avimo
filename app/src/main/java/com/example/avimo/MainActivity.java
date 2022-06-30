@@ -1385,22 +1385,50 @@ public class MainActivity extends AppCompatActivity implements Regex {
     }
 
 
-    public void comandoAyuda(String dat){
+    public void comandoAyuda(String dat) {
 
         Matcher m;
         m = Pattern.compile(regex_ayuda_crear_evento).matcher(dat);
 
-        if(m.find()){   //AYUDA CREAR EVENTO
+        if (m.find()) {   //AYUDA CREAR EVENTO
 
             tts.speak(getString(R.string.comando_ayuda_crear_evento).trim(), TextToSpeech.QUEUE_ADD, null);
             output.setText(getString(R.string.comando_ayuda_crear_evento));
 
-        }
-        else{
+        } else {
+            m = Pattern.compile(regex_ayuda_listar_evento).matcher(dat);
+            if(m.find()){   //AYUDA LISTAR EVENTO
 
-            tts.speak(getString(R.string.comando_ayuda_general).trim(), TextToSpeech.QUEUE_ADD, null);
-            output.setText(getString(R.string.comando_ayuda_general));
+                tts.speak(getString(R.string.comando_ayuda_listar_evento).trim(), TextToSpeech.QUEUE_ADD, null);
+                output.setText(getString(R.string.comando_ayuda_listar_evento));
 
+            } else {
+                m = Pattern.compile(regex_ayuda_buscar_evento).matcher(dat);
+                if (m.find()) {   //AYUDA BUSCAR EVENTO
+
+                    tts.speak(getString(R.string.comando_ayuda_buscar_evento).trim(), TextToSpeech.QUEUE_ADD, null);
+                    output.setText(getString(R.string.comando_ayuda_buscar_evento));
+
+                } else {
+                    m = Pattern.compile(regex_ayuda_eliminar_evento).matcher(dat);
+                    if (m.find()) {   //AYUDA ELIMINAR EVENTO
+
+                        tts.speak(getString(R.string.comando_ayuda_eliminar_evento).trim(), TextToSpeech.QUEUE_ADD, null);
+                        output.setText(getString(R.string.comando_ayuda_eliminar_evento));
+                    } else {
+                        m = Pattern.compile(regex_ayuda_modificar_evento).matcher(dat);
+                        if (m.find()) {   //AYUDA MODIFICAR EVENTO
+
+                            tts.speak(getString(R.string.comando_ayuda_modificar_evento).trim(), TextToSpeech.QUEUE_ADD, null);
+                            output.setText(getString(R.string.comando_ayuda_modificar_evento));
+                        } else {
+
+                            tts.speak(getString(R.string.comando_ayuda_general).trim(), TextToSpeech.QUEUE_ADD, null);
+                            output.setText(getString(R.string.comando_ayuda_general));
+                        }
+                    }
+                }
+            }
         }
 
     }
