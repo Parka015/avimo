@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements Regex {
 
     // OTROS OBJETOS
     private ImageView micButton;
+    private ImageView img_avimo;
     private TextView textView;
 
     // Variables de modificarEvento
@@ -86,8 +87,14 @@ public class MainActivity extends AppCompatActivity implements Regex {
 
         input = findViewById(R.id.text);
         output = findViewById(R.id.avimo_text);
+
         micButton = findViewById(R.id.button);
         micButton.setImageResource(R.drawable.microfono);
+
+        img_avimo = findViewById(R.id.img_avimo);
+        img_avimo.setImageResource(R.drawable.normal);
+
+
         textView = findViewById(R.id.textView);
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
 
@@ -169,7 +176,7 @@ public class MainActivity extends AppCompatActivity implements Regex {
         });
 
         tts.setPitch(1.0f);
-        tts.setSpeechRate(0.8f);
+        tts.setSpeechRate(0.9f);
     }
 
 
@@ -276,9 +283,10 @@ public class MainActivity extends AppCompatActivity implements Regex {
             input.setText("Tu has dicho: " + data);
             respuesta = "";
 
+            img_avimo.setImageResource(R.drawable.normal);
+
             Pattern pattern_fecha = Pattern.compile(regex_eliminar_evento);
             Matcher m = pattern_fecha.matcher(data);
-
 
             if ((m.find() && !modificando) || eliminando) {      // ELIMINAR EVENTO
 
@@ -327,8 +335,10 @@ public class MainActivity extends AppCompatActivity implements Regex {
                                         m = Pattern.compile("más ejemplos").matcher(data);
                                         if (m.find()) {
                                             comandoEjemplos(data);
-                                        } else
+                                        } else{
                                             tts.speak("No entiendo".trim(), TextToSpeech.QUEUE_ADD, null);
+                                            img_avimo.setImageResource(R.drawable.error);
+                                        }
                                     }
                                 }
                             }
@@ -403,10 +413,14 @@ public class MainActivity extends AppCompatActivity implements Regex {
                         " Fecha final: "+ fechas.get(1).get(Calendar.DAY_OF_MONTH)+"/"+ mes_fin+
                         "/"+ fechas.get(1).get(Calendar.YEAR)+" a las "+fechas.get(1).get(Calendar.HOUR_OF_DAY)+":"+min_fin+".\n";
                 respuesta += getString(R.string.evento_creado);
+
+                img_avimo.setImageResource(R.drawable.exito);
             }else{
                 respuesta += getString(R.string.evento_no_creado);
+                img_avimo.setImageResource(R.drawable.error);
             }
-        }
+        }else
+            img_avimo.setImageResource(R.drawable.error);
 
         tts.speak(respuesta.trim(), TextToSpeech.QUEUE_ADD, null);
         output.setText(respuesta);
@@ -454,7 +468,11 @@ public class MainActivity extends AppCompatActivity implements Regex {
 
             }
 
+            img_avimo.setImageResource(R.drawable.exito);
+
         }else{
+
+            img_avimo.setImageResource(R.drawable.error);
 
             tts.speak(getString(R.string.no_hay_eventos).trim(), TextToSpeech.QUEUE_ADD, null);
             respuesta += getString(R.string.no_hay_eventos);
@@ -478,6 +496,7 @@ public class MainActivity extends AppCompatActivity implements Regex {
 
                 if (identificador != ""){
 
+
                     //Notificar de que ya se puede especificar que atributos del evento cambiar
                     tts.speak(getString(R.string.modificar_evento_encontrado).trim(), TextToSpeech.QUEUE_ADD, null);
                     respuesta += ".\n"+getString(R.string.modificar_evento_encontrado);
@@ -495,6 +514,8 @@ public class MainActivity extends AppCompatActivity implements Regex {
                 String localizacion = recogerLocalizacion(data);
 
                 if (fechas.isEmpty() && titulo == "" && tags == "" && localizacion == "") {
+
+                    img_avimo.setImageResource(R.drawable.error);
 
                     tts.speak(getString(R.string.modificar_evento_ningun_cambio).trim(), TextToSpeech.QUEUE_ADD, null);
                     respuesta += getString(R.string.modificar_evento_ningun_cambio);
@@ -554,6 +575,8 @@ public class MainActivity extends AppCompatActivity implements Regex {
                     tts.speak(getString(R.string.modificar_evento_pregunta_final).trim(), TextToSpeech.QUEUE_ADD, null);
                     respuesta += getString(R.string.modificar_evento_pregunta_final);
 
+                    img_avimo.setImageResource(R.drawable.exito);
+
                 }
 
 
@@ -590,6 +613,8 @@ public class MainActivity extends AppCompatActivity implements Regex {
 
             if(data.equals("[si]")){
 
+                img_avimo.setImageResource(R.drawable.exito);
+
                 Evento ev = new Evento();
 
                 ev.eliminarEvento(this,id_evento);
@@ -602,6 +627,8 @@ public class MainActivity extends AppCompatActivity implements Regex {
 
             }else if(data.equals("[no]")){
 
+                img_avimo.setImageResource(R.drawable.exito);
+
                 tts.speak(getString(R.string.evento_no_eliminado).trim(), TextToSpeech.QUEUE_ADD, null);
                 respuesta += getString(R.string.evento_no_eliminado);
 
@@ -609,6 +636,8 @@ public class MainActivity extends AppCompatActivity implements Regex {
                 eliminando = false;
 
             }else{
+
+                img_avimo.setImageResource(R.drawable.error);
 
                 tts.speak(getString(R.string.eliminar_evento_no_respondido).trim(), TextToSpeech.QUEUE_ADD, null);
                 respuesta += getString(R.string.eliminar_evento_no_respondido);
@@ -643,10 +672,14 @@ public class MainActivity extends AppCompatActivity implements Regex {
                     " el "+formatter.format(cal_ini.getTime())+
                     " a las " + cal_ini.get(Calendar.HOUR_OF_DAY) + ":" + minutos;
 
+            img_avimo.setImageResource(R.drawable.exito);
+
 
         }else{
+
             tts.speak(getString(R.string.evento_no_encontrado)+" "+titulo.trim(), TextToSpeech.QUEUE_ADD, null);
             respuesta += getString(R.string.evento_no_encontrado)+" "+titulo;
+            img_avimo.setImageResource(R.drawable.error);
         }
 
         return id;
