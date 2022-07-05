@@ -69,14 +69,5 @@ public interface Regex {
     public static String regex_mas_ayuda_crear_evento= "más ayuda crear";
     public static String regex_mas_ejemplos_crear_evento= "más ejemplos crear";
 
-  /*
-    // Enums
-    enum Menu {
-        CREAR_EVENTO,
-        MODIFICAR_EVENTO,
-        ELIMINAR_EVENTO,
-        LISTAR_EVENTO,
-        NINGUNO
-    }
-*/
+
 }

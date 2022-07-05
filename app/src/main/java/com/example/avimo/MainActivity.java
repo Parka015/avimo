@@ -42,11 +42,11 @@ import java.util.regex.Pattern;
 public class MainActivity extends AppCompatActivity implements Regex {
 
     // AUDIO
-    public static final Integer RecordAudioRequestCode = 1;
+    public static final int RECORD_AUDIO_REQUEST_CODE = 1;
     public static final int MY_PERMISSIONS_REQUEST_WRITE_READ_CALENDAR = 123;
     private SpeechRecognizer speechRecognizer;
     private TextToSpeech tts;
-    Boolean audio_activo=false;
+    private Boolean audio_activo=false;
 
     // OBJETOS DE SALIDA Y ENTRADA DE TEXTO EN LA PANTALLA
     private EditText input;
@@ -67,6 +67,9 @@ public class MainActivity extends AppCompatActivity implements Regex {
 
     // Variables de eliminarEvento
     private Boolean eliminando;
+
+    //Gestor de calendario
+    GestorEventos gev;
 
 
 
@@ -104,6 +107,8 @@ public class MainActivity extends AppCompatActivity implements Regex {
 
         // Variables de modificarEvento
         eliminando = false;
+
+        gev = new GestorEventos();
 
 
         final Intent speechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
@@ -189,7 +194,7 @@ public class MainActivity extends AppCompatActivity implements Regex {
 
     private void checkPermissionRecord() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.RECORD_AUDIO},RecordAudioRequestCode);
+            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.RECORD_AUDIO},RECORD_AUDIO_REQUEST_CODE);
         }
     }
 
@@ -197,7 +202,7 @@ public class MainActivity extends AppCompatActivity implements Regex {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        if (requestCode == RecordAudioRequestCode && grantResults.length > 0 ){
+        if (requestCode == RECORD_AUDIO_REQUEST_CODE && grantResults.length > 0 ){
             if(grantResults[0] == PackageManager.PERMISSION_GRANTED)
                 Toast.makeText(this,"Permiso de micrófono aceptado",Toast.LENGTH_SHORT).show();
         }else
@@ -276,10 +281,10 @@ public class MainActivity extends AppCompatActivity implements Regex {
     }
 
 
-//AQUI retocar main que lo he comentado para solo ejecutar crear evento
+
     public void main(){
 
-        if(checkPermissionWriteCalendar() || checkPermissionReadCalendar()) {
+        if(checkPermissionWriteCalendar() && checkPermissionReadCalendar()) {
             input.setText("Tu has dicho: " + data);
             respuesta = "";
 
@@ -378,7 +383,6 @@ public class MainActivity extends AppCompatActivity implements Regex {
         String localizacion = recogerLocalizacion(data);
 
         if(!fechas.isEmpty() && titulo != "" ){
-            Evento ev = new Evento();
             exito=false;
 
             int all_day = 0;
@@ -395,7 +399,7 @@ public class MainActivity extends AppCompatActivity implements Regex {
 
             long start_date = fechas.get(0).getTimeInMillis();
             long finish_date = fechas.get(1).getTimeInMillis();
-            exito = ev.crearEvento(this,titulo, start_date, finish_date, localizacion, tags, all_day, 1);
+            exito = gev.crearEvento(this,titulo, start_date, finish_date, localizacion, tags, all_day, 1);
 
             if(exito){
                 String min_ini = ""+fechas.get(0).get(Calendar.MINUTE);
@@ -434,8 +438,7 @@ public class MainActivity extends AppCompatActivity implements Regex {
         ArrayList<String> fechas_ini = new ArrayList<>();
         ArrayList<String> nombres_eventos = new ArrayList<>();
 
-        Evento ev = new Evento();
-        ev.listarEventos(this, fechas, nombres_eventos, fechas_ini);
+        gev.listarEventos(this, fechas, nombres_eventos, fechas_ini);
 
         if(!nombres_eventos.isEmpty()) {
 
@@ -532,8 +535,7 @@ public class MainActivity extends AppCompatActivity implements Regex {
                         endMillis = fechas.get(1).getTimeInMillis();
                     }
 
-                    Evento ev = new Evento();
-                    ev.modificarEvento(this,id_evento,titulo,startMillis,
+                    gev.modificarEvento(this,id_evento,titulo,startMillis,
                             endMillis, localizacion, tags);
 
                     //Notificar de los cambios
@@ -615,9 +617,8 @@ public class MainActivity extends AppCompatActivity implements Regex {
 
                 img_avimo.setImageResource(R.drawable.exito);
 
-                Evento ev = new Evento();
 
-                ev.eliminarEvento(this,id_evento);
+                gev.eliminarEvento(this,id_evento);
 
                 tts.speak(getString(R.string.evento_eliminado).trim(), TextToSpeech.QUEUE_ADD, null);
                 respuesta += getString(R.string.evento_eliminado);
@@ -653,8 +654,8 @@ public class MainActivity extends AppCompatActivity implements Regex {
     public String buscarEvento(String titulo){
 
         Calendar cal_ini = Calendar.getInstance();
-        Evento ev = new Evento();
-        String id = ev.buscarEvento(this, titulo, cal_ini);
+
+        String id = gev.buscarEvento(this, titulo, cal_ini);
 
         if(id != ""){
 

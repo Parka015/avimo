@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.TimeZone;
 
-public class Evento extends AppCompatActivity {
+public class GestorEventos{
 
     public Boolean crearEvento(Activity act, String title, long startMillis, long endMillis, String loc,
                             String tags, int all_day, int has_alarm){
