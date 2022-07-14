@@ -1,0 +1,164 @@
+<resources>
+    <string name="app_name">Avimo</string>
+    <string name="hint_edittext">Pulsa el botón para hablar.</string>
+    <string name="error_escucha">No te he oido, repite otra vez.</string>
+    <string name="escuchando">Habla ahora...</string>
+
+    <string name="error_permisos">No puedo funcionar sin acceso al calendario ni al micrófono.</string>
+
+
+
+    <!-- Texto de crearEvento  -->
+    <string name="fecha_no_encontrada">No se ha encontrado una fecha, introduzca una o un periodo de tiempo.</string>
+    <string name="titulo_no_encontrado">No se ha encontrado un titulo para el evento, introduzca uno para saber como llamar al evento.</string>
+
+    <string name="evento_creado">El evento ha sido creado.</string>
+    <string name="evento_no_creado">No ha sido posible crear el evento.</string>
+
+    <string name="mes_no_valido">El mes introducido no existe.</string>
+    <string name="hora_no_valida">He detectado una hora no válida, asi que la he sustituido por 0.</string>
+    <string name="min_no_valido">He detectado unos minutos no válidos, asi que los he sustituido por 0.</string>
+    <string name="fini_mayor_ffin">No es válida esta fecha ya que la fecha de inicio es posterior a la fecha de fin.</string>
+
+
+
+    <!-- Texto de listarEventos  -->
+    <string name="no_hay_eventos">No se ha encontrado eventos en esta franja de tiempo.</string>
+
+
+
+    <!-- Texto de buscarEvento  -->
+    <string name="evento_encontrado">Se ha encontrado el evento con titulo</string>
+    <string name="evento_no_encontrado">No se ha encontrado el evento con titulo</string>
+
+
+
+    <!-- Texto de eliminarEvento  -->
+    <string name="eliminar_evento_encontrado">¿Esta seguro de que desea borrar el evento? responda \"si\" o \"no\".</string>
+    <string name="evento_eliminado">El evento ha sido borrado.</string>
+    <string name="evento_no_eliminado">El evento no ha sido borrado.</string>
+    <string name="eliminar_evento_no_respondido">No me ha confirmado si debo borrar el evento, responda \"si\" o \"no\".</string>
+
+
+
+
+    <!-- Texto de modificarEvento  -->
+    <string name="modificar_evento_encontrado">Dígame los cambios que desea realizar. En caso de querer cancelar diga \"si\"</string>
+    <string name="modificar_evento_ningun_cambio">No se ha modificado nada del evento. En caso de querer cancelar diga \"si\"</string>
+
+    <string name="cambio_fecha">Se cambió la fecha al</string>
+    <string name="cambio_titulo">Se cambió el título a</string>
+    <string name="cambio_tag">Se cambió los tags a</string>
+    <string name="cambio_localizacion">Se cambió la localización a</string>
+
+    <string name="modificar_evento_pregunta_final">¿Desea realizar más cambios? Si es así dígame los cambios que desea realizar.
+    Si lo que desea es finalizar diga \"si\"</string>
+    <string name="modificar_evento_fin">Se ha terminado de modificar el evento.</string>
+
+
+
+    <!-- AYUDA  -->
+    <string name="comando_ayuda_general"> Hola, soy Avimo. Esta app permite realizar las siguientes acciones: crear, modificar, eliminar, buscar y listar eventos.
+    Para obtener información sobre como usar cada acción, dime \"ayuda\", seguido de la acción sobre la que quieres preguntar</string>
+
+
+    <!-- Ayuda listar evento  -->
+    <string name="comando_ayuda_listar_evento">Para listar los eventos de una franja de tiempo, necesito una fecha, (un dia concreto),
+        o una franja de tiempo, (por ejemplo \"esta semana\").\n\n
+
+        Ejemplo 1: Lista eventos de la semana que viene. \n
+        Ejemplo 2: Lístame los eventos de mañana. \n
+        Ejemplo 3: Lista los eventos desde el miércoles al viernes. \n\n
+
+        La fecha sigue las mismas reglas que en \"crear evento\", por lo que si necesita más información de qué fechas entiendo, diga
+        \"más ayuda crear\".
+    </string>
+
+
+    <!-- Ayuda buscar evento  -->
+    <string name="comando_ayuda_buscar_evento">Para buscar cuando ocurrirá un evento, debe proporcionarme el título de este.
+        Si no sabe el título, será mejor buscarlo manualmente a través de la función de \"listar eventos\".\n\n
+
+        Ejemplo 1: Busca evento con título cita con el médico fin. \n
+        Ejemplo 2: Búscame el evento de nombre ir al parque fin. \n
+
+        El título sigue las mismas reglas que en \"crear evento\", por lo que si necesita más información de cómo especificar el
+        título, diga \"más ayuda crear\".
+    </string>
+
+
+    <!-- Ayuda modificar evento  -->
+    <string name="comando_ayuda_modificar_evento">Para modificar un evento, debe proporcionarme el título de este.\n\n
+
+        Ejemplo 1: Modificar evento con título cita con el médico fin. \n
+        Ejemplo 2: Modifícame el evento de nombre ir al parque fin. \n
+
+        Posteriormente se entrará en el modo de modificar el evento, y solo tendrá que proporcionar un título,
+        fecha,localización o tag nuevo.
+
+        El título, fecha, localización y tag siguen las mismas reglas que en \"crear evento\", por lo que si necesita más información de cómo especificar
+        cada atributo, diga \"más ayuda crear\".
+    </string>
+
+
+    <!-- Ayuda eliminar evento  -->
+    <string name="comando_ayuda_eliminar_evento">Para eliminar un evento, debe proporcionarme el título de este.\n\n
+
+        Ejemplo 1: Eliminar evento con título cita con el médico fin. \n
+        Ejemplo 2: Elimina el evento de nombre ir al parque fin. \n
+
+        El título sigue las mismas reglas que en \"crear evento\", por lo que si necesita más información de cómo especificar el
+        título, diga \"más ayuda crear\".
+    </string>
+
+
+    <!-- Ayuda crear evento  -->
+    <string name="comando_ayuda_crear_evento">Para crear un evento, necesito al menos una fecha de inicio y un título. Opcionalmente me puedes dar
+        fecha de fin y una localización.\n\n
+        Ejemplo 1: Créame un evento con título cita médico fin el 5 de marzo a las 4 de la tarde. \n
+        Ejemplo 2: Crea un evento de título ir al parque fin mañana de las 9 a las 12. \n
+        Ejemplo 3: Crea evento de nombre fiesta local fin desde el miércoles al martes de la semana que viene. \n\n
+
+        En caso de necesitar una explicación más detallada, dígame \"más ayuda crear\" o si en su lugar necesita más ejemplos diga
+        \"más ejemplos crear\".
+    </string>
+
+
+    <string name="comando_mas_ayuda_crear_evento_intro">Para crear un evento, necesito al menos una fecha de inicio y un título. Opcionalmente me puedes dar
+        fecha de fin, (si el evento no termina al final del día), y una localización.\n\n</string>
+
+    <string name="comando_mas_ayuda_crear_evento_fecha">
+        La fecha admite expresiones como: hoy, mañana o pasado mañana. Los dias de la semana, pudiendo especificar que sean de la semana que viene.
+        También admite una fecha especificando el día, el mes y opcionalmente el año si no es el actual. Si quiere especificar una hora, debe ser después de dar la fecha\n\n
+    </string>
+
+    <string name="comando_mas_ayuda_crear_evento_titulo">
+        Para el título debes expresar una de las preposiciones \"de\" o \"con\", seguida de una de las palabras \"título\" o \"nombre\", a continuación
+        cómo deseas llamar al evento y finaliza con la palabra \"fin\".\n\n</string>
+
+    <string name="comando_mas_ayuda_crear_evento_localizacion">
+        Para la localización, decir la palabra \"en\", seguido de la localización en cuestión, y finalizando con la palabra "fin". Para ver algunos ejemplos diga \"ejemplos crear\".
+        </string>
+
+    <!-- Ejemplos  -->
+    <string name="comando_ejemplos_crear_evento_1">
+        1) Crea un evento el sábado de la siguiente semana con título concierto fin. \n
+    </string>
+    <string name="comando_ejemplos_crear_evento_2">
+        2) Créame un evento con título ir al medico fin el lunes a las 7 en hospital del carmen fin. \n
+    </string>
+    <string name="comando_ejemplos_crear_evento_3">
+        3) Créame un evento de título prueba fin desde el 5 de enero al 20 de marzo a la 1 de la mañana. \n
+    </string>
+    <string name="comando_ejemplos_crear_evento_4">
+        4) Créame un evento de nombre prueba fin del 5 al 20 de marzo de 2023 a la 1. \n
+    </string>
+    <string name="comando_ejemplos_crear_evento_5">
+        5) Créame un evento del 5 al 10 de nombre periodo exámenes fin en la UGR. (cogería el mes y año actual). \n
+    </string>
+    <string name="comando_ejemplos_crear_evento_6">
+        6) Crea un evento de título concierto fin el sábado de la próxima semana a las 8 y 50 de la noche. \n
+    </string>
+
+
+    </resources>
